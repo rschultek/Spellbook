@@ -92,7 +92,31 @@ This project is part of the **10xDevs course** and serves as a learning project 
    npm install
    ```
 
-4. **Start the development server**
+4. **Set up Supabase**
+
+   **Option A: Local Supabase (Recommended for development)**
+
+   ```bash
+   # Start local Supabase instance (requires Docker)
+   supabase start
+
+   # Apply database migrations
+   npx supabase migration up
+   ```
+
+   **Option B: Supabase Cloud**
+   - Create a project at [supabase.com](https://supabase.com)
+   - Copy `.env.example` to `.env` and add your Supabase credentials:
+     ```bash
+     cp .env.example .env
+     ```
+   - Edit `.env` with your Supabase project URL and anon key
+   - Apply migrations to remote database:
+     ```bash
+     npx supabase db push
+     ```
+
+5. **Start the development server**
 
    ```bash
    npm run dev
@@ -100,7 +124,23 @@ This project is part of the **10xDevs course** and serves as a learning project 
 
    The application will be available at `http://localhost:3000`
 
-> **Note**: Detailed setup instructions for database and authentication will be added as the project progresses.
+### Database Schema
+
+The database uses a single table architecture optimized for the MVP:
+
+- **`public.snippets`** - Code snippets with full-text search, tags, and RLS policies
+- **`auth.users`** - User authentication (managed by Supabase Auth)
+
+All database migrations are located in `supabase/migrations/` directory.
+
+**Key features:**
+
+- Row Level Security (RLS) ensures users can only access their own snippets
+- Full-text search with PostgreSQL GIN indexes
+- Tag-based filtering with array operations
+- Auto-updating timestamps via triggers
+
+For detailed schema documentation, see [`.ai/db-plan.md`](.ai/db-plan.md).
 
 ## Available Scripts
 
