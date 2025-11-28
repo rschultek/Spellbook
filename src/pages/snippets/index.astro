@@ -1,0 +1,62 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import SnippetList from "../../components/snippets/SnippetList";
+import SearchBar from "../../components/snippets/SearchBar";
+import LanguageFilter from "../../components/snippets/LanguageFilter";
+import { SnippetsService } from "../../lib/services/snippets.service";
+
+// Require authentication
+const {
+  data: { user },
+  error,
+} = await Astro.locals.supabase.auth.getUser();
+if (!user) {
+  return Astro.redirect("/login");
+}
+
+// Get query parameters
+const searchQuery = Astro.url.searchParams.get("q") || "";
+const languageFilter = Astro.url.searchParams.get("lang") || "All";
+
+// Fetch snippets
+const service = new SnippetsService(Astro.locals.supabase);
+let snippets;
+
+if (searchQuery || (languageFilter && languageFilter !== "All")) {
+  snippets = await service.searchAndFilter(searchQuery || undefined, languageFilter !== "All" ? (languageFilter as any) : undefined);
+} else {
+  snippets = await service.getAll();
+}
+---
+
+<Layout title="My Snippets - Spellbook">
+  <div class="container mx-auto px-4 py-8">
+    <div class="flex items-center justify-between mb-8">
+      <h1 class="text-3xl font-bold">My Snippets</h1>
+      <a href="/snippets/new" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"> + New Snippet </a>
+    </div>
+
+    {/* Search and Filter */}
+    <div class="mb-6 flex gap-4">
+      <SearchBar client:load initialQuery={searchQuery} />
+      <LanguageFilter client:load initialLanguage={languageFilter} />
+    </div>
+
+    {/* Results count */}
+    {
+      (searchQuery || languageFilter !== "All") && (
+        <p class="text-gray-600 mb-4">
+          Found {snippets.length} snippet{snippets.length !== 1 ? "s" : ""}
+          {languageFilter !== "All" && ` in ${languageFilter}`}
+          {searchQuery && ` matching "${searchQuery}"`}
+          <a href="/snippets" class="ml-2 text-blue-600 hover:underline">
+            Clear filters
+          </a>
+        </p>
+      )
+    }
+
+    {/* Snippet List */}
+    <SnippetList snippets={snippets} />
+  </div>
+</Layout>

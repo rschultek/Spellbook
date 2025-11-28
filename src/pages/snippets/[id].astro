@@ -1,0 +1,31 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import SnippetDetail from "../../components/snippets/SnippetDetail";
+import { SnippetsService } from "../../lib/services/snippets.service";
+
+// Require authentication
+const {
+  data: { session },
+} = await Astro.locals.supabase.auth.getSession();
+if (!session) {
+  return Astro.redirect("/login");
+}
+
+// Get snippet ID from URL
+const { id } = Astro.params;
+
+// Fetch snippet
+const service = new SnippetsService(Astro.locals.supabase);
+const snippet = await service.getById(id!);
+
+// 404 if not found (or belongs to another user due to RLS)
+if (!snippet) {
+  return Astro.redirect("/snippets");
+}
+---
+
+<Layout title={`${snippet.title} - Spellbook`}>
+
+
+  <SnippetDetail snippet={snippet} client:load />
+</Layout>
