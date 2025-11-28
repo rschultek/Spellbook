@@ -88,7 +88,7 @@ export default function SnippetDetail({ snippet }: Props) {
                 onClick={async () => {
                   try {
                     const { SnippetsService } = await import("../../lib/services/snippets.service");
-                    const service = new SnippetsService(supabaseClient);
+                    const service = new SnippetsService(getSupabaseBrowserClient());
                     await service.delete(snippet.id);
                     toast.success("Snippet deleted successfully!");
                     window.location.href = "/snippets";
