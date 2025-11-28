@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { toast } from "../../lib/utils/toast";
 import type { SnippetResponseDto } from "../../types";
-import { supabaseClient } from "../../db/supabase.client";
+import { getSupabaseBrowserClient } from "../../lib/utils/supabase-browser";
 
 interface Props {
   snippet: SnippetResponseDto;

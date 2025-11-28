@@ -13,7 +13,7 @@ export class SnippetsService {
    * Create a new snippet
    * RLS automatically sets user_id from JWT
    */
-  async create(dto: CreateSnippetDto): Promise<SnippetResponseDto> {
+  async create(dto: CreateSnippetDto, userId: string): Promise<SnippetResponseDto> {
     const { data, error } = await this.supabase
       .from("snippets")
       .insert({
@@ -22,6 +22,7 @@ export class SnippetsService {
         language: dto.language,
         description: dto.description || null,
         tags: dto.tags || [],
+        user_id: userId,
       })
       .select()
       .single();

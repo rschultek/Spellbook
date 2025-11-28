@@ -6,7 +6,7 @@ import { Button } from "../ui/button";
 import { toast } from "../../lib/utils/toast";
 import { SNIPPET_LANGUAGES } from "../../types";
 import type { CreateSnippetDto, SnippetResponseDto } from "../../types";
-import { supabaseClient } from "../../db/supabase.client";
+import { getSupabaseBrowserClient } from "../../lib/utils/supabase-browser";
 
 interface Props {
   mode: "create" | "edit";
@@ -39,7 +39,16 @@ export default function SnippetForm({ mode, initialData }: Props) {
 
   const onSubmit = async (data: any) => {
     try {
-      const service = new SnippetsService(supabaseClient);
+      const supabase = getSupabaseBrowserClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        throw new Error("You must be logged in to create a snippet");
+      }
+
+      const service = new SnippetsService(supabase);
 
       const dto: CreateSnippetDto = {
         title: data.title,
@@ -50,7 +59,7 @@ export default function SnippetForm({ mode, initialData }: Props) {
       };
 
       if (mode === "create") {
-        await service.create(dto);
+        await service.create(dto, user.id);
         toast.success("Snippet created successfully!");
         window.location.href = "/snippets";
       } else {
@@ -138,7 +147,12 @@ export default function SnippetForm({ mode, initialData }: Props) {
         </label>
         <input
           {...register("tags", {
-            setValueAs: (v) => (v ? v.split(",").map((t: string) => t.trim()).filter(Boolean) : []),
+            setValueAs: (v) => {
+              if (typeof v === "string") {
+                return v.split(",").map((t: string) => t.trim()).filter(Boolean);
+              }
+              return Array.isArray(v) ? v : [];
+            },
           })}
           type="text"
           id="tags"
