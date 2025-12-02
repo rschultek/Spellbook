@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { config } from "dotenv";
 import { OpenRouterService } from "../lib/services/openrouter.service";
 

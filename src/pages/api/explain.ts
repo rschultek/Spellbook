@@ -74,14 +74,13 @@ export const POST: APIRoute = async ({ request }) => {
     );
   } catch (error: unknown) {
     const err = error as { message?: string; status?: number };
-    console.error("[API /api/explain] Error:", err);
 
     // Sprawdź czy to rate limit
     const isRateLimit = err.message?.includes("Rate limit");
 
     return new Response(
       JSON.stringify({
-        error: isRateLimit 
+        error: isRateLimit
           ? "Za dużo zapytań. Poczekaj chwilę i spróbuj ponownie."
           : "Nie udało się wygenerować wyjaśnienia. Spróbuj ponownie.",
       }),

@@ -30,7 +30,7 @@ const LANGUAGE_MAP: Record<SnippetLanguage, string> = {
 export default function CodeBlock({ code, language, showLineNumbers = true }: CodeBlockProps) {
   const [html, setHtml] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
-  
+
   // Explain feature state
   const [isExplaining, setIsExplaining] = useState(false);
   const [explanation, setExplanation] = useState<string>("");
@@ -122,14 +122,9 @@ export default function CodeBlock({ code, language, showLineNumbers = true }: Co
         <Button onClick={copyToClipboard} variant="secondary" size="sm">
           📋 Copy
         </Button>
-        
+
         {isCode && (
-          <Button 
-            onClick={explainCode} 
-            variant="secondary" 
-            size="sm"
-            disabled={isExplaining}
-          >
+          <Button onClick={explainCode} variant="secondary" size="sm" disabled={isExplaining}>
             {isExplaining ? "⏳ Loading..." : "💡 Explain"}
           </Button>
         )}
@@ -152,32 +147,41 @@ export default function CodeBlock({ code, language, showLineNumbers = true }: Co
 
       {/* Explanation Modal */}
       {showExplanationModal && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
           onClick={() => setShowExplanationModal(false)}
+          onKeyDown={(e) => e.key === "Escape" && setShowExplanationModal(false)}
+          role="button"
+          tabIndex={0}
+          aria-label="Close modal"
         >
-          <div 
+          {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
+          <div
             className="bg-white rounded-lg max-w-2xl w-full p-6"
             onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-title"
           >
             <div className="flex items-start justify-between mb-4">
-              <h2 className="text-xl font-bold">💡 Code Explanation</h2>
-              <button 
+              <h2 id="modal-title" className="text-xl font-bold">
+                💡 Code Explanation
+              </h2>
+              <button
                 onClick={() => setShowExplanationModal(false)}
                 className="text-gray-500 hover:text-gray-700 text-2xl leading-none"
               >
                 ×
               </button>
             </div>
-            
+
             <div className="prose max-w-none">
               <p className="text-gray-700 whitespace-pre-wrap">{explanation}</p>
             </div>
 
             <div className="mt-6 flex justify-end">
-              <Button onClick={() => setShowExplanationModal(false)}>
-                Zamknij
-              </Button>
+              <Button onClick={() => setShowExplanationModal(false)}>Zamknij</Button>
             </div>
           </div>
         </div>
