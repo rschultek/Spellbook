@@ -31,7 +31,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     // Inicjalizuj service
     const openRouterService = new OpenRouterService(apiKey, {
-      defaultModel: "x-ai/grok-beta",
+      defaultModel: "x-ai/grok-4.1-fast:free",
       timeout: 60000,
     });
 

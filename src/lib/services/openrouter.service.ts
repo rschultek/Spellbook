@@ -25,7 +25,7 @@ export class OpenRouterService {
     // Ustaw wartości domyślne
     this.options = {
       baseUrl: options?.baseUrl || "https://openrouter.ai/api/v1",
-      defaultModel: options?.defaultModel || "x-ai/grok-beta",
+      defaultModel: options?.defaultModel || "x-ai/grok-4.1-fast:free",
       timeout: options?.timeout || 30000,
       retries: options?.retries || 3,
       headers: options?.headers || {},
@@ -80,7 +80,7 @@ export class OpenRouterService {
    */
   get models(): readonly string[] {
     return [
-      "x-ai/grok-beta",
+      "x-ai/grok-4.1-fast:free",
       "openai/gpt-4-turbo",
       "openai/gpt-4",
       "openai/gpt-3.5-turbo",
@@ -89,6 +89,7 @@ export class OpenRouterService {
       "anthropic/claude-3-haiku",
       "google/gemini-pro",
       "meta-llama/llama-3-70b",
+      "meta-llama/llama-3.2-3b-instruct:free",
     ];
   }
 
