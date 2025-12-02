@@ -1,4 +1,4 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
+import type { SupabaseClient, PostgrestError } from "@supabase/supabase-js";
 import type { CreateSnippetDto, UpdateSnippetDto, SnippetResponseDto, SnippetLanguage } from "../../types";
 
 /**
@@ -28,7 +28,6 @@ export class SnippetsService {
       .single();
 
     if (error) {
-      console.error("[SnippetsService] Create error:", error);
       throw this.mapError(error);
     }
 
@@ -43,7 +42,6 @@ export class SnippetsService {
     const { data, error } = await this.supabase.from("snippets").select("*").order("created_at", { ascending: false });
 
     if (error) {
-      console.error("[SnippetsService] GetAll error:", error);
       throw this.mapError(error);
     }
 
@@ -62,7 +60,6 @@ export class SnippetsService {
       if (error.code === "PGRST116") {
         return null;
       }
-      console.error("[SnippetsService] GetById error:", error);
       throw this.mapError(error);
     }
 
@@ -85,7 +82,6 @@ export class SnippetsService {
       .single();
 
     if (error) {
-      console.error("[SnippetsService] Update error:", error);
       throw this.mapError(error);
     }
 
@@ -100,7 +96,6 @@ export class SnippetsService {
     const { error } = await this.supabase.from("snippets").delete().eq("id", id);
 
     if (error) {
-      console.error("[SnippetsService] Delete error:", error);
       throw this.mapError(error);
     }
   }
@@ -121,7 +116,6 @@ export class SnippetsService {
       .order("created_at", { ascending: false });
 
     if (error) {
-      console.error("[SnippetsService] Search error:", error);
       throw this.mapError(error);
     }
 
@@ -139,7 +133,6 @@ export class SnippetsService {
       .order("created_at", { ascending: false });
 
     if (error) {
-      console.error("[SnippetsService] FilterByLanguage error:", error);
       throw this.mapError(error);
     }
 
@@ -171,7 +164,6 @@ export class SnippetsService {
     const { data, error } = await supabaseQuery;
 
     if (error) {
-      console.error("[SnippetsService] SearchAndFilter error:", error);
       throw this.mapError(error);
     }
 
@@ -181,7 +173,7 @@ export class SnippetsService {
   /**
    * Map Supabase errors to user-friendly messages
    */
-  private mapError(error: any): Error {
+  private mapError(error: PostgrestError): Error {
     const errorMessages: Record<string, string> = {
       "23505": "A snippet with this title already exists",
       "23514": "Invalid data. Please check your input.",

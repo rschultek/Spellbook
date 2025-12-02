@@ -1,5 +1,5 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
-import type { RegisterUserDto, LoginUserDto, ResetPasswordDto } from "../../types";
+import type { SupabaseClient, AuthError } from "@supabase/supabase-js";
+import type { RegisterUserDto, LoginUserDto } from "../../types";
 
 /**
  * Authentication service
@@ -18,7 +18,6 @@ export class AuthService {
     });
 
     if (error) {
-      console.error("[AuthService] Registration error:", JSON.stringify(error, null, 2));
       throw this.mapAuthError(error);
     }
 
@@ -35,7 +34,6 @@ export class AuthService {
     });
 
     if (error) {
-      console.error("[AuthService] Login error:", error);
       throw this.mapAuthError(error);
     }
 
@@ -49,21 +47,6 @@ export class AuthService {
     const { error } = await this.supabase.auth.signOut();
 
     if (error) {
-      console.error("[AuthService] Logout error:", error);
-      throw this.mapAuthError(error);
-    }
-  }
-
-  /**
-   * Send password reset email
-   */
-  async requestPasswordReset(dto: ResetPasswordDto) {
-    const { error } = await this.supabase.auth.resetPasswordForEmail(dto.email, {
-      redirectTo: dto.redirectTo || `${window.location.origin}/reset-password`,
-    });
-
-    if (error) {
-      console.error("[AuthService] Password reset error:", error);
       throw this.mapAuthError(error);
     }
   }
@@ -75,7 +58,6 @@ export class AuthService {
     const { data, error } = await this.supabase.auth.getSession();
 
     if (error) {
-      console.error("[AuthService] Get session error:", error);
       return null;
     }
 
@@ -85,7 +67,7 @@ export class AuthService {
   /**
    * Map Supabase auth errors to user-friendly messages
    */
-  private mapAuthError(error: any): Error {
+  private mapAuthError(error: AuthError): Error {
     const errorMessages: Record<string, string> = {
       "Invalid login credentials": "Invalid email or password",
       "User already registered": "An account with this email already exists",

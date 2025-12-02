@@ -14,7 +14,7 @@ export const createSnippetSchema = z.object({
 
   content: z.string().min(VALIDATION_CONSTRAINTS.content.min, "Content is required"),
 
-  language: z.enum(SNIPPET_LANGUAGES as any, {
+  language: z.enum(SNIPPET_LANGUAGES as [string, ...string[]], {
     errorMap: () => ({ message: "Please select a language" }),
   }),
 
@@ -41,5 +41,5 @@ export const updateSnippetSchema = createSnippetSchema.partial();
  */
 export const searchQuerySchema = z.object({
   query: z.string().optional(),
-  language: z.enum([...SNIPPET_LANGUAGES, "All"] as any).optional(),
+  language: z.enum([...SNIPPET_LANGUAGES, "All"] as [string, ...string[]]).optional(),
 });

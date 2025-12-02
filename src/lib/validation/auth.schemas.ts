@@ -36,23 +36,3 @@ export const loginSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
 });
-
-/**
- * Password reset request schema
- */
-export const resetPasswordRequestSchema = z.object({
-  email: emailSchema,
-});
-
-/**
- * New password schema
- */
-export const newPasswordSchema = z
-  .object({
-    password: passwordSchema,
-    confirmPassword: z.string().min(1, "Please confirm your password"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });

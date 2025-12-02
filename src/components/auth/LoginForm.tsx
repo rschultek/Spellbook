@@ -19,7 +19,7 @@ export default function LoginForm({ returnUrl = "/snippets" }: Props) {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: LoginUserDto) => {
     try {
       const { getSupabaseBrowserClient } = await import("../../lib/utils/supabase-browser");
       const supabase = getSupabaseBrowserClient();
@@ -41,7 +41,6 @@ export default function LoginForm({ returnUrl = "/snippets" }: Props) {
       } else {
         toast.error("Failed to log in");
       }
-      console.error("Login error:", error);
     }
   };
 

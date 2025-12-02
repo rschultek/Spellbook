@@ -23,7 +23,7 @@ export default function SearchBar({ initialQuery = "" }: Props) {
     if (debouncedQuery !== initialQuery) {
       window.location.href = url.toString();
     }
-  }, [debouncedQuery]);
+  }, [debouncedQuery, initialQuery]);
 
   const handleClear = () => {
     setQuery("");

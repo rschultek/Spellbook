@@ -37,7 +37,7 @@ export default function SnippetForm({ mode, initialData }: Props) {
         },
   });
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: CreateSnippetDto) => {
     try {
       const supabase = getSupabaseBrowserClient();
       const {
@@ -63,9 +63,13 @@ export default function SnippetForm({ mode, initialData }: Props) {
         toast.success("Snippet created successfully!");
         window.location.href = "/snippets";
       } else {
-        await service.update(initialData!.id, dto);
-        toast.success("Snippet updated successfully!");
-        window.location.href = `/snippets/${initialData!.id}`;
+        if (initialData?.id) {
+          await service.update(initialData.id, dto);
+          toast.success("Snippet updated successfully!");
+          window.location.href = `/snippets/${initialData.id}`;
+        } else {
+          throw new Error("Missing snippet ID for update");
+        }
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -73,7 +77,6 @@ export default function SnippetForm({ mode, initialData }: Props) {
       } else {
         toast.error(`Failed to ${mode} snippet`);
       }
-      console.error(`${mode} snippet error:`, error);
     }
   };
 

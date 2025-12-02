@@ -75,15 +75,6 @@ export interface LoginUserDto {
 }
 
 /**
- * DTO for password reset request
- * Used in forgot password form and auth.resetPasswordForEmail() call
- */
-export interface ResetPasswordDto {
-  email: string; // Valid email format, required
-  redirectTo?: string; // Optional redirect URL after password reset
-}
-
-/**
  * User session data returned by Supabase Auth
  * Represents authenticated user information
  */
@@ -411,3 +402,9 @@ export const DEFAULT_SNIPPET_VALUES: CreateSnippetDto = {
   description: null,
   tags: [],
 };
+
+// ============================================================================
+// OpenRouter AI Service Types
+// ============================================================================
+
+export * from "./types/openrouter.types";

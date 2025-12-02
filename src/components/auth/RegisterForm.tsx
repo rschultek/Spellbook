@@ -15,7 +15,7 @@ export default function RegisterForm() {
     resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: RegisterUserDto) => {
     try {
       const { getSupabaseBrowserClient } = await import("../../lib/utils/supabase-browser");
       const supabase = getSupabaseBrowserClient();
@@ -37,7 +37,6 @@ export default function RegisterForm() {
       } else {
         toast.error("Failed to create account");
       }
-      console.error("Registration error:", error);
     }
   };
 

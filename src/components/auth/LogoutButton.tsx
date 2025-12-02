@@ -13,9 +13,8 @@ export default function LogoutButton() {
 
       toast.success("Logged out successfully");
       window.location.href = "/login";
-    } catch (error) {
+    } catch {
       toast.error("Failed to log out");
-      console.error("Logout error:", error);
     }
   };
 

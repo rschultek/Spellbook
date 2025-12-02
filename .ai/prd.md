@@ -60,7 +60,6 @@ FR-001: Autentykacja użytkownika (Supabase Auth)
 - Rejestracja nowego użytkownika przez email/hasło
 - Logowanie istniejącego użytkownika
 - Wylogowanie użytkownika
-- Resetowanie zapomnianego hasła (email flow)
 - Utrzymywanie sesji (auto-refresh token)
 - Przekierowanie do strony logowania dla niezalogowanych użytkowników
 - Haszowanie haseł (bcrypt przez Supabase)
@@ -340,17 +339,6 @@ Kryteria akceptacji:
 - Użytkownik jest przekierowany do strony /login
 - Po wylogowaniu próba dostępu do /snippets przekierowuje do /login
 - Token sesji jest usuwany
-
-US-004: Resetowanie hasła
-Jako użytkownik, który zapomniał hasła, chcę móc zresetować hasło przy użyciu linku wysłanego na email, aby odzyskać dostęp do konta.
-
-Kryteria akceptacji:
-
-- Link "Forgot password?" prowadzi do strony reset password
-- Użytkownik podaje swój email
-- Email z linkiem resetującym jest wysyłany (Supabase handles)
-- Link w emailu prowadzi do strony ustawienia nowego hasła
-- Po ustawieniu nowego hasła użytkownik może się zalogować
 
 US-005: Przekierowanie niezalogowanych użytkowników
 Jako niezalogowany użytkownik, gdy próbuję uzyskać dostęp do chronionej strony, chcę być przekierowany do strony logowania, aby najpierw się zalogować.

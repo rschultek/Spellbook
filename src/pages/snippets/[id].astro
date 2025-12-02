@@ -16,7 +16,10 @@ const { id } = Astro.params;
 
 // Fetch snippet
 const service = new SnippetsService(Astro.locals.supabase);
-const snippet = await service.getById(id!);
+if (!id) {
+  return Astro.redirect("/snippets");
+}
+const snippet = await service.getById(id);
 
 // 404 if not found (or belongs to another user due to RLS)
 if (!snippet) {

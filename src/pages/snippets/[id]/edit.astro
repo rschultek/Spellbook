@@ -14,7 +14,10 @@ if (!session) {
 // Get snippet
 const { id } = Astro.params;
 const service = new SnippetsService(Astro.locals.supabase);
-const snippet = await service.getById(id!);
+if (!id) {
+  return Astro.redirect("/snippets");
+}
+const snippet = await service.getById(id);
 
 if (!snippet) {
   return Astro.redirect("/snippets");

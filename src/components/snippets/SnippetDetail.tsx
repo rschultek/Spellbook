@@ -66,7 +66,8 @@ export default function SnippetDetail({ snippet }: Props) {
           <div className="bg-white rounded-lg max-w-md w-full p-6">
             <h2 className="text-xl font-bold mb-4">Delete Snippet</h2>
             <p className="text-gray-700 mb-6">
-              Are you sure you want to delete "<strong>{snippet.title}</strong>"? This action cannot be undone.
+              Are you sure you want to delete &quot;<strong>{snippet.title}</strong>&quot;? This action cannot be
+              undone.
             </p>
             <div className="flex gap-4 justify-end">
               <Button variant="outline" onClick={() => setShowDeleteModal(false)}>
@@ -81,9 +82,8 @@ export default function SnippetDetail({ snippet }: Props) {
                     await service.delete(snippet.id);
                     toast.success("Snippet deleted successfully!");
                     window.location.href = "/snippets";
-                  } catch (error) {
+                  } catch {
                     toast.error("Failed to delete snippet");
-                    console.error("Delete error:", error);
                   }
                 }}
               >

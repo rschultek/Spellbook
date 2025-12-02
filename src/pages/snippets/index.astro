@@ -9,7 +9,6 @@ import { SnippetsService } from "../../lib/services/snippets.service";
 // Require authentication
 const {
   data: { user },
-  error,
 } = await Astro.locals.supabase.auth.getUser();
 if (!user) {
   return Astro.redirect("/login");
@@ -26,7 +25,7 @@ let snippets;
 if (searchQuery || (languageFilter && languageFilter !== "All")) {
   snippets = await service.searchAndFilter(
     searchQuery || undefined,
-    languageFilter !== "All" ? (languageFilter as any) : undefined
+    languageFilter !== "All" ? (languageFilter as import("../../types").SnippetLanguage) : undefined
   );
 } else {
   snippets = await service.getAll();
