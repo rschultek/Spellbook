@@ -3,6 +3,7 @@ import Layout from "../../layouts/Layout.astro";
 import SnippetList from "../../components/snippets/SnippetList";
 import SearchBar from "../../components/snippets/SearchBar";
 import LanguageFilter from "../../components/snippets/LanguageFilter";
+import LogoutButton from "../../components/auth/LogoutButton";
 import { SnippetsService } from "../../lib/services/snippets.service";
 
 // Require authentication
@@ -23,7 +24,10 @@ const service = new SnippetsService(Astro.locals.supabase);
 let snippets;
 
 if (searchQuery || (languageFilter && languageFilter !== "All")) {
-  snippets = await service.searchAndFilter(searchQuery || undefined, languageFilter !== "All" ? (languageFilter as any) : undefined);
+  snippets = await service.searchAndFilter(
+    searchQuery || undefined,
+    languageFilter !== "All" ? (languageFilter as any) : undefined
+  );
 } else {
   snippets = await service.getAll();
 }
@@ -33,7 +37,12 @@ if (searchQuery || (languageFilter && languageFilter !== "All")) {
   <div class="container mx-auto px-4 py-8">
     <div class="flex items-center justify-between mb-8">
       <h1 class="text-3xl font-bold">My Snippets</h1>
-      <a href="/snippets/new" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"> + New Snippet </a>
+      <div class="flex gap-3">
+        <a href="/snippets/new" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+          + New Snippet
+        </a>
+        <LogoutButton client:load />
+      </div>
     </div>
 
     {/* Search and Filter */}

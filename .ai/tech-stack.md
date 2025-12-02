@@ -73,23 +73,27 @@
 ### Dlaczego ten stack?
 
 **Oszczędność czasu:**
+
 - Supabase (Auth + DB + SDK) oszczędza ~10-13 godzin vs custom backend
 - Shadcn/ui oszczędza ~5-8 godzin vs custom komponenty
 - Brak deploymentu oszczędza ~15-20 godzin vs Docker + DigitalOcean
 - **Razem: ~30-43 godziny oszczędności** - krytyczne dla 42h budżetu
 
 **Koszty:**
+
 - Wszystkie narzędzia: **$0/miesiąc** w ramach free tiers
 - Supabase Free: 500MB DB, 50K użytkowników/miesiąc
 - GitHub Actions Free: 2,000 minut/miesiąc
 - Localhost hosting: $0
 
 **Zgodność z kursem:**
+
 - React + TypeScript - zgodne z materiałami kursu
 - Supabase - używany jako przykład w kursie
 - Wszystkie wymagania spełnione (Auth, CRUD, testy, CI/CD, dokumentacja)
 
 **Bezpieczeństwo:**
+
 - Row Level Security (RLS) - enforced na poziomie bazy danych
 - Automatyczne haszowanie haseł (bcrypt)
 - Parametryzowane queries (brak SQL injection)
@@ -135,6 +139,7 @@ CI/CD:
 **Status:** ✅ Zatwierdzony - gotowy do implementacji
 
 **Zmiany od v1.0:**
+
 - Uproszczono dokument do kluczowych informacji
 - Usunięto długie analizy i porównania
 - Dodano jasną strukturę: co jest, czego nie ma, dlaczego

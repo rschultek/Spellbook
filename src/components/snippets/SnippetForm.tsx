@@ -149,7 +149,10 @@ export default function SnippetForm({ mode, initialData }: Props) {
           {...register("tags", {
             setValueAs: (v) => {
               if (typeof v === "string") {
-                return v.split(",").map((t: string) => t.trim()).filter(Boolean);
+                return v
+                  .split(",")
+                  .map((t: string) => t.trim())
+                  .filter(Boolean);
               }
               return Array.isArray(v) ? v : [];
             },
@@ -165,7 +168,13 @@ export default function SnippetForm({ mode, initialData }: Props) {
       {/* Submit */}
       <div className="flex gap-4">
         <Button type="submit" disabled={isSubmitting} className="flex-1">
-          {isSubmitting ? (mode === "create" ? "Creating..." : "Updating...") : mode === "create" ? "Create Snippet" : "Update Snippet"}
+          {isSubmitting
+            ? mode === "create"
+              ? "Creating..."
+              : "Updating..."
+            : mode === "create"
+              ? "Create Snippet"
+              : "Update Snippet"}
         </Button>
         <Button type="button" variant="outline" onClick={() => window.history.back()}>
           Cancel

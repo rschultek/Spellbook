@@ -6,7 +6,7 @@ import type { Database } from "./database.types";
  */
 function parseCookies(cookieHeader: string | null): { name: string; value: string }[] {
   if (!cookieHeader) return [];
-  
+
   return cookieHeader.split(";").map((cookie) => {
     const [name, ...rest] = cookie.trim().split("=");
     return { name, value: rest.join("=") };
@@ -28,7 +28,7 @@ export function createSupabaseServerClient(request: Request, headers: Headers) {
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value, options }) => {
             const cookieParts = [`${name}=${value}`];
-            
+
             if (options?.maxAge) {
               cookieParts.push(`Max-Age=${options.maxAge}`);
             }
@@ -47,7 +47,7 @@ export function createSupabaseServerClient(request: Request, headers: Headers) {
             if (options?.httpOnly) {
               cookieParts.push("HttpOnly");
             }
-            
+
             headers.append("Set-Cookie", cookieParts.join("; "));
           });
         },

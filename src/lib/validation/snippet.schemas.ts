@@ -20,7 +20,10 @@ export const createSnippetSchema = z.object({
 
   description: z
     .string()
-    .max(VALIDATION_CONSTRAINTS.description.max, `Description must be ${VALIDATION_CONSTRAINTS.description.max} characters or less`)
+    .max(
+      VALIDATION_CONSTRAINTS.description.max,
+      `Description must be ${VALIDATION_CONSTRAINTS.description.max} characters or less`
+    )
     .optional()
     .nullable(),
 

@@ -15,8 +15,6 @@ const returnUrl = Astro.url.searchParams.get("return") || "/snippets";
 ---
 
 <Layout title="Login - Spellbook">
-
-
   <div class="min-h-screen flex items-center justify-center px-4">
     <div class="max-w-md w-full">
       <h1 class="text-3xl font-bold text-center mb-8">Welcome Back</h1>
@@ -27,9 +25,7 @@ const returnUrl = Astro.url.searchParams.get("return") || "/snippets";
           <a href="/register" class="text-blue-600 hover:underline">Sign up</a>
         </p>
         <p>
-          <a href="/forgot-password" class="text-blue-600 hover:underline">
-            Forgot password?
-          </a>
+          <a href="/forgot-password" class="text-blue-600 hover:underline"> Forgot password? </a>
         </p>
       </div>
     </div>

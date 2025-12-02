@@ -35,7 +35,10 @@ export default function SnippetCard({ snippet }: Props) {
   };
 
   return (
-    <a href={`/snippets/${snippet.id}`} className="block p-6 bg-white border rounded-lg hover:shadow-lg transition-shadow">
+    <a
+      href={`/snippets/${snippet.id}`}
+      className="block p-6 bg-white border rounded-lg hover:shadow-lg transition-shadow"
+    >
       <div className="flex items-start justify-between mb-2">
         <h3 className="text-lg font-semibold truncate flex-1">{snippet.title}</h3>
         <span className={`px-2 py-1 text-xs rounded-full ${colorClass}`}>{snippet.language}</span>

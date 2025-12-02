@@ -4,7 +4,7 @@ import { createSupabaseServerClient } from "../db/supabase.client";
 export const onRequest = defineMiddleware(async (context, next) => {
   // Create response headers for Set-Cookie
   const responseHeaders = new Headers();
-  
+
   // Create Supabase client
   const supabase = createSupabaseServerClient(context.request, responseHeaders);
 
@@ -16,7 +16,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
   // Get response
   const response = await next();
-  
+
   // Apply Set-Cookie headers from Supabase
   responseHeaders.forEach((value, key) => {
     response.headers.append(key, value);

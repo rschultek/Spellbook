@@ -3,6 +3,7 @@ import { Button } from "../ui/button";
 import { toast } from "../../lib/utils/toast";
 import type { SnippetResponseDto } from "../../types";
 import { getSupabaseBrowserClient } from "../../lib/utils/supabase-browser";
+import CodeBlock from "./CodeBlock";
 
 interface Props {
   snippet: SnippetResponseDto;
@@ -10,11 +11,6 @@ interface Props {
 
 export default function SnippetDetail({ snippet }: Props) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-
-  const copyToClipboard = async () => {
-    await navigator.clipboard.writeText(snippet.content);
-    toast.success("Copied to clipboard!");
-  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleString();
@@ -62,14 +58,7 @@ export default function SnippetDetail({ snippet }: Props) {
       )}
 
       {/* Content */}
-      <div className="relative">
-        <Button onClick={copyToClipboard} className="absolute top-4 right-4" variant="secondary" size="sm">
-          📋 Copy
-        </Button>
-        <pre className="bg-gray-900 text-gray-100 p-6 rounded-lg overflow-x-auto">
-          <code className="font-mono text-sm">{snippet.content}</code>
-        </pre>
-      </div>
+      <CodeBlock code={snippet.content} language={snippet.language as import("../../types").SnippetLanguage} />
 
       {/* Delete Modal - Simple version */}
       {showDeleteModal && (

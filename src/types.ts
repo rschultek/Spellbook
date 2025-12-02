@@ -1,10 +1,10 @@
 /**
  * DTO and Command Model Type Definitions
- * 
+ *
  * This file contains all Data Transfer Objects (DTOs) and Command Models
  * used throughout the Spellbook application. All types are derived from
  * the database schema types to ensure type safety and consistency.
- * 
+ *
  * @module types
  */
 
@@ -109,7 +109,7 @@ export interface UserSession {
  * Command Model for creating a new snippet
  * Derived from SnippetInsert but excludes auto-generated fields
  * Used in create snippet form and API insert operation
- * 
+ *
  * Validation rules (enforced by Zod schema + DB constraints):
  * - title: 1-200 chars, no whitespace-only
  * - content: min 1 char, no max limit
@@ -117,10 +117,7 @@ export interface UserSession {
  * - language: must be valid SnippetLanguage
  * - tags: optional array of strings
  */
-export type CreateSnippetDto = Omit<
-  SnippetInsert,
-  "id" | "user_id" | "created_at" | "updated_at"
-> & {
+export type CreateSnippetDto = Omit<SnippetInsert, "id" | "user_id" | "created_at" | "updated_at"> & {
   title: string; // Required, 1-200 characters
   content: string; // Required, minimum 1 character
   language: SnippetLanguage; // Required, constrained to enum
@@ -132,14 +129,11 @@ export type CreateSnippetDto = Omit<
  * Command Model for updating an existing snippet
  * All fields optional (partial update supported)
  * Excludes fields that cannot be modified by user
- * 
+ *
  * Note: user_id, created_at cannot be changed
  * updated_at is automatically set by database trigger
  */
-export type UpdateSnippetDto = Omit<
-  SnippetUpdate,
-  "id" | "user_id" | "created_at" | "updated_at"
-> & {
+export type UpdateSnippetDto = Omit<SnippetUpdate, "id" | "user_id" | "created_at" | "updated_at"> & {
   title?: string; // 1-200 characters if provided
   content?: string; // Minimum 1 character if provided
   language?: SnippetLanguage; // Must be valid enum value if provided
@@ -167,10 +161,7 @@ export type SnippetListItemDto = Snippet;
  * Minimal snippet data for preview/card display
  * Used in snippet list grid view
  */
-export type SnippetPreviewDto = Pick<
-  Snippet,
-  "id" | "title" | "language" | "tags" | "created_at"
-> & {
+export type SnippetPreviewDto = Pick<Snippet, "id" | "title" | "language" | "tags" | "created_at"> & {
   content_preview: string; // First 100-150 characters of content
 };
 
@@ -267,9 +258,7 @@ export type SnippetFormData = CreateSnippetDto;
  * Form data for snippet editing
  * All fields present (populated from existing snippet) but submit as partial
  */
-export type SnippetEditFormData = Required<
-  Omit<UpdateSnippetDto, "tags">
-> & {
+export type SnippetEditFormData = Required<Omit<UpdateSnippetDto, "tags">> & {
   tags: string[]; // Always array, never null in form
 };
 
@@ -341,18 +330,14 @@ export type Timestamp = string;
 /**
  * Type guard to check if response is error
  */
-export function isApiError<T>(
-  response: ApiResponse<T>,
-): response is ApiErrorResponse {
+export function isApiError<T>(response: ApiResponse<T>): response is ApiErrorResponse {
   return response.error !== null;
 }
 
 /**
  * Type guard to check if response is success
  */
-export function isApiSuccess<T>(
-  response: ApiResponse<T>,
-): response is ApiSuccessResponse<T> {
+export function isApiSuccess<T>(response: ApiResponse<T>): response is ApiSuccessResponse<T> {
   return response.error === null;
 }
 
@@ -364,9 +349,7 @@ export function isApiSuccess<T>(
  * Type for Supabase query builder result
  * Used when working directly with Supabase SDK
  */
-export type SupabaseQueryResult<T> =
-  | { data: T; error: null }
-  | { data: null; error: Error };
+export type SupabaseQueryResult<T> = { data: T; error: null } | { data: null; error: Error };
 
 /**
  * Type for Supabase auth response
