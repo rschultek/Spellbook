@@ -10,20 +10,7 @@
  */
 
 import { describe, it, expect } from "vitest";
-
-// Helper function to escape HTML - extracted for testing
-// NOTE: This is a copy of the function from CodeBlock.tsx
-// In production, consider extracting it to a shared utils file
-function escapeHtml(text: string): string {
-  const map: Record<string, string> = {
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#039;",
-  };
-  return text.replace(/[&<>"']/g, (m) => map[m]);
-}
+import { escapeHtml } from "@/lib/utils/html";
 
 describe("escapeHtml()", () => {
   describe("XSS Prevention - Critical Security Tests", () => {

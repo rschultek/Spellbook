@@ -12,25 +12,7 @@
 
 import { describe, it, expect } from "vitest";
 import type { SnippetLanguage } from "@/types";
-
-// Language map - extracted for testing
-// NOTE: This is a copy from CodeBlock.tsx
-// In production, consider extracting it to a shared constants file
-const LANGUAGE_MAP: Record<SnippetLanguage, string> = {
-  JavaScript: "javascript",
-  TypeScript: "typescript",
-  Python: "python",
-  PHP: "php",
-  Bash: "bash",
-  CSS: "css",
-  HTML: "html",
-  JSON: "json",
-  MySQL: "sql",
-  YAML: "yaml",
-  Elixir: "elixir",
-  Note: "markdown",
-  Other: "text",
-};
+import { LANGUAGE_MAP } from "@/lib/constants/languages";
 
 // All valid SnippetLanguage values from types.ts
 const ALL_SNIPPET_LANGUAGES: readonly SnippetLanguage[] = [
