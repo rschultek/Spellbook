@@ -245,7 +245,6 @@ Główne cele procesu testowania:
 **Kroki testowe**:
 
 1. **Rejestracja**
-
    - Wejdź na `/register`
    - Uzupełnij email: `test@example.com`
    - Uzupełnij password: `password123`
@@ -254,11 +253,9 @@ Główne cele procesu testowania:
    - **Oczekiwany rezultat**: Przekierowanie do `/snippets`
 
 2. **Empty State**
-
    - **Oczekiwany rezultat**: Widoczny komunikat "No snippets yet" i przycisk "Add your first snippet"
 
 3. **Utworzenie Snippetu**
-
    - Kliknij "Add your first snippet" lub przejdź do `/snippets/new`
    - Uzupełnij formularz:
      - Title: "MySQL SELECT Query"
@@ -273,13 +270,11 @@ Główne cele procesu testowania:
      - Snippet widoczny na liście
 
 4. **Wyświetlenie Szczegółów**
-
    - Kliknij na kartę snippetu
    - **Oczekiwany rezultat**: Przekierowanie do `/snippets/:id`
    - Weryfikuj wyświetlanie: title, content, language badge, description, tags
 
 5. **Edycja Snippetu**
-
    - Kliknij "Edit"
    - Zmień title na "MySQL Active Users Query"
    - Kliknij "Update Snippet"
@@ -288,20 +283,17 @@ Główne cele procesu testowania:
      - Zaktualizowany tytuł widoczny w szczegółach
 
 6. **Wyszukiwanie**
-
    - Wróć do `/snippets`
    - W search bar wpisz "active"
    - **Oczekiwany rezultat**: Snippet jest widoczny w wynikach
 
 7. **Filtrowanie**
-
    - Wybierz filter "MySQL" z dropdown
    - **Oczekiwany rezultat**: Snippet jest widoczny (tylko MySQL snippety)
    - Wybierz filter "JavaScript"
    - **Oczekiwany rezultat**: Empty state "No snippets found"
 
 8. **Usunięcie Snippetu**
-
    - Wróć do szczegółów snippetu
    - Kliknij "Delete"
    - **Oczekiwany rezultat**: Modal confirmation z tytułem snippetu
@@ -312,7 +304,6 @@ Główne cele procesu testowania:
      - Empty state widoczny
 
 9. **Wylogowanie**
-
    - Kliknij "Logout" w nagłówku
    - **Oczekiwany rezultat**: Przekierowanie do `/login`
 
@@ -426,26 +417,22 @@ Główne cele procesu testowania:
 **Kroki testowe**:
 
 1. **Create Loading State**
-
    - Wejdź na `/snippets/new`
    - Uzupełnij formularz poprawnie
    - Kliknij "Create Snippet"
    - **Oczekiwany rezultat**: Tekst przycisku zmienia się na "Creating..." i przycisk jest disabled
 
 2. **Create Success Toast**
-
    - Po zapisaniu snippetu
    - **Oczekiwany rezultat**: Toast notification (zielony) "Snippet created successfully!" pojawia się w prawym górnym rogu
    - Toast znika automatycznie po 3-5 sekundach
 
 3. **Update Loading State**
-
    - Edytuj snippet
    - Kliknij "Update Snippet"
    - **Oczekiwany rezultat**: Tekst przycisku zmienia się na "Updating..."
 
 4. **Delete Confirmation Modal**
-
    - Na stronie szczegółów kliknij "Delete"
    - **Oczekiwany rezultat**: Modal z tytułem snippetu i pytaniem "Are you sure...?"
    - Kliknij "Cancel"
@@ -474,18 +461,15 @@ Główne cele procesu testowania:
 **Kroki testowe**:
 
 1. **Desktop (> 1024px)**
-
    - Ustaw viewport na 1920x1080
    - Przejdź do `/snippets`
    - **Oczekiwany rezultat**: Grid z **3 kolumnami**
 
 2. **Tablet (768px - 1024px)**
-
    - Ustaw viewport na 800x600
    - **Oczekiwany rezultat**: Grid z **2 kolumnami**
 
 3. **Mobile (< 768px)**
-
    - Ustaw viewport na 375x667 (iPhone)
    - **Oczekiwany rezultat**: Grid z **1 kolumną**
 
@@ -508,20 +492,17 @@ Główne cele procesu testowania:
 **Kroki testowe**:
 
 1. **Network Error Simulation**
-
    - Wyłącz Supabase (lub internet)
    - Spróbuj utworzyć snippet
    - **Oczekiwany rezultat**: Toast error "Unable to connect. Please check your connection."
 
 2. **Invalid Credentials**
-
    - Wejdź na `/login`
    - Wpisz nieprawidłowy email/password
    - Kliknij "Login"
    - **Oczekiwany rezultat**: Error message "Invalid email or password"
 
 3. **Duplicate Email Registration**
-
    - Wejdź na `/register`
    - Wpisz email który już istnieje w bazie
    - **Oczekiwany rezultat**: Error "An account with this email already exists"
@@ -1162,9 +1143,7 @@ Przed oddaniem projektu, zweryfikuj:
 
 import { test, expect } from "@playwright/test";
 
-test("TC-E2E-001: Full user flow - Register, CRUD, Logout", async ({
-  page,
-}) => {
+test("TC-E2E-001: Full user flow - Register, CRUD, Logout", async ({ page }) => {
   // 1. Register
   await page.goto("/register");
   await page.fill('input[name="email"]', "test@example.com");
@@ -1182,18 +1161,13 @@ test("TC-E2E-001: Full user flow - Register, CRUD, Logout", async ({
   await page.click("text=Add your first snippet");
   await page.fill('input[name="title"]', "MySQL SELECT Query");
   await page.selectOption('select[name="language"]', "MySQL");
-  await page.fill(
-    'textarea[name="content"]',
-    "SELECT * FROM users WHERE active = 1;"
-  );
+  await page.fill('textarea[name="content"]', "SELECT * FROM users WHERE active = 1;");
   await page.fill('textarea[name="description"]', "Get all active users");
   await page.fill('input[name="tags"]', "database, sql, query");
   await page.click('button[type="submit"]');
 
   // Verify toast notification
-  await expect(
-    page.locator("text=Snippet created successfully!")
-  ).toBeVisible();
+  await expect(page.locator("text=Snippet created successfully!")).toBeVisible();
 
   // Verify redirect and snippet visible
   await expect(page).toHaveURL("/snippets");
@@ -1208,9 +1182,7 @@ test("TC-E2E-001: Full user flow - Register, CRUD, Logout", async ({
   await page.fill('input[name="title"]', "MySQL Active Users Query");
   await page.click('button[type="submit"]');
 
-  await expect(
-    page.locator("text=Snippet updated successfully!")
-  ).toBeVisible();
+  await expect(page.locator("text=Snippet updated successfully!")).toBeVisible();
   await expect(page.locator("text=MySQL Active Users Query")).toBeVisible();
 
   // 6. Search
@@ -1223,9 +1195,7 @@ test("TC-E2E-001: Full user flow - Register, CRUD, Logout", async ({
   await page.click("text=Delete");
   await page.click("text=Confirm Delete"); // Modal confirmation
 
-  await expect(
-    page.locator("text=Snippet deleted successfully!")
-  ).toBeVisible();
+  await expect(page.locator("text=Snippet deleted successfully!")).toBeVisible();
   await expect(page.locator("text=No snippets yet")).toBeVisible();
 
   // 8. Logout
