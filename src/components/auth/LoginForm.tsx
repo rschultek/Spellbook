@@ -34,7 +34,10 @@ export default function LoginForm({ returnUrl = "/snippets" }: Props) {
 
       toast.success("Login successful!");
       // Force reload to sync session between client and server
-      window.location.href = returnUrl;
+      // Add small delay to let user see the toast
+      setTimeout(() => {
+        window.location.href = returnUrl;
+      }, 1000);
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message);
@@ -45,19 +48,23 @@ export default function LoginForm({ returnUrl = "/snippets" }: Props) {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" data-testid="login-form">
       <div>
         <label htmlFor="email" className="block text-sm font-medium mb-1">
           Email *
         </label>
         <input
           {...register("email")}
-          type="email"
+          type="text"
           id="email"
           className="w-full px-3 py-2 border rounded-md"
-          autoComplete="email"
+          data-testid="login-email-input"
         />
-        {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message as string}</p>}
+        {errors.email && (
+          <p className="text-red-500 text-sm mt-1" data-testid="login-email-error">
+            {errors.email.message as string}
+          </p>
+        )}
       </div>
 
       <div>
@@ -70,11 +77,16 @@ export default function LoginForm({ returnUrl = "/snippets" }: Props) {
           id="password"
           className="w-full px-3 py-2 border rounded-md"
           autoComplete="current-password"
+          data-testid="login-password-input"
         />
-        {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message as string}</p>}
+        {errors.password && (
+          <p className="text-red-500 text-sm mt-1" data-testid="login-password-error">
+            {errors.password.message as string}
+          </p>
+        )}
       </div>
 
-      <Button type="submit" className="w-full" disabled={isSubmitting}>
+      <Button type="submit" className="w-full" disabled={isSubmitting} data-testid="login-submit-button">
         {isSubmitting ? "Logging in..." : "Log In"}
       </Button>
     </form>

@@ -47,7 +47,7 @@ Obiekt konfiguracyjny z następującymi polami:
 ```typescript
 interface OpenRouterServiceOptions {
   baseUrl?: string; // Domyślnie: 'https://openrouter.ai/api/v1'
-  defaultModel?: string; // Domyślny model, np. 'x-ai/grok-4.1-fast:free'
+  defaultModel?: string; // Domyślny model, np. 'tngtech/deepseek-r1t2-chimera:free'
   timeout?: number; // Timeout w ms (domyślnie: 30000)
   retries?: number; // Liczba ponownych prób (domyślnie: 3)
   headers?: Record<string, string>; // Dodatkowe nagłówki HTTP
@@ -172,7 +172,7 @@ const response = await openRouterService.chat({
       content: "Explain what is async/await in TypeScript",
     },
   ],
-  model: "x-ai/grok-4.1-fast:free",
+  model: "tngtech/deepseek-r1t2-chimera:free",
   temperature: 0.7,
   maxTokens: 500,
 });
@@ -1037,7 +1037,7 @@ export class OpenRouterService {
     // Ustaw wartości domyślne
     this.options = {
       baseUrl: options?.baseUrl || "https://openrouter.ai/api/v1",
-      defaultModel: options?.defaultModel || "x-ai/grok-4.1-fast:free",
+      defaultModel: options?.defaultModel || "tngtech/deepseek-r1t2-chimera:free",
       timeout: options?.timeout || 30000,
       retries: options?.retries || 3,
       headers: options?.headers || {},
@@ -1092,7 +1092,7 @@ export class OpenRouterService {
    */
   get models(): readonly string[] {
     return [
-      "x-ai/grok-4.1-fast:free",
+      "tngtech/deepseek-r1t2-chimera:free",
       "openai/gpt-4-turbo",
       "openai/gpt-4",
       "openai/gpt-3.5-turbo",
@@ -1285,7 +1285,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     // Inicjalizuj service
     const openRouterService = new OpenRouterService(apiKey, {
-      defaultModel: "x-ai/grok-4.1-fast:free",
+      defaultModel: "tngtech/deepseek-r1t2-chimera:free",
       timeout: 60000,
     });
 

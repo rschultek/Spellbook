@@ -40,32 +40,48 @@ export const POST: APIRoute = async ({ request }) => {
 
     // Inicjalizuj service
     const openRouterService = new OpenRouterService(apiKey, {
-      defaultModel: "x-ai/grok-4.1-fast:free",
+      defaultModel: "tngtech/deepseek-r1t2-chimera:free",
       timeout: 15000, // 15s timeout (skrócone)
     });
 
     // Przygotuj prompt zoptymalizowany dla KRÓTKIEJ odpowiedzi
-    const userMessage =
-      language && language !== "Other" && language !== "Note"
-        ? `Wytłumacz w 1-2 zdaniach po polsku co robi ten kod ${language}:\n\n${code}`
-        : `Wytłumacz w 1-2 zdaniach po polsku co robi ten kod:\n\n${code}`;
+    const langInfo = language && language !== "Other" && language !== "Note" ? ` (${language})` : "";
+
+    const systemMessage = `Jesteś pomocnym asystentem programisty. Odpowiadasz ZAWSZE po polsku, ZAWSZE w maksymalnie 2-3 krótkich zdaniach. Nie używaj formatowania markdown, nie używaj list, nie cytuj kodu. Tylko zwięzły opis tekstowy.`;
+
+    const userMessage = `Co robi ten kod${langInfo}? Odpowiedz w 2-3 zdaniach:\n\n${code}`;
 
     // Wyślij request do AI
     const response = await openRouterService.chat({
       messages: [
         {
+          role: "system",
+          content: systemMessage,
+        },
+        {
           role: "user",
           content: userMessage,
         },
       ],
-      maxTokens: 80, // Jeszcze krótsze wyjaśnienie = szybsze
-      temperature: 0.5, // Niższa temperatura = bardziej deterministyczne i szybsze
+      maxTokens: 500, // Więcej tokenów dla modeli reasoning (np. DeepSeek R1)
+      temperature: 0.3, // Niższa = bardziej zwięzłe i spójne
     });
+
+    // Sprawdź czy odpowiedź jest kompletna
+    let explanation = response.content;
+    if (response.finishReason === "length" && explanation) {
+      // Odpowiedź została ucięta - dodaj wielokropek
+      explanation = explanation.trimEnd();
+      if (!explanation.endsWith(".") && !explanation.endsWith("!") && !explanation.endsWith("?")) {
+        explanation += "...";
+      }
+    }
 
     return new Response(
       JSON.stringify({
-        explanation: response.content,
+        explanation,
         tokensUsed: response.usage.totalTokens,
+        complete: response.finishReason === "stop",
       }),
       {
         status: 200,

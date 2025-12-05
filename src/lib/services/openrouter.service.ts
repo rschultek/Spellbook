@@ -25,7 +25,7 @@ export class OpenRouterService {
     // Ustaw wartości domyślne
     this.options = {
       baseUrl: options?.baseUrl || "https://openrouter.ai/api/v1",
-      defaultModel: options?.defaultModel || "x-ai/grok-4.1-fast:free",
+      defaultModel: options?.defaultModel || "tngtech/deepseek-r1t2-chimera:free",
       timeout: options?.timeout || 30000,
       retries: options?.retries || 3,
       headers: options?.headers || {},
@@ -80,7 +80,7 @@ export class OpenRouterService {
    */
   get models(): readonly string[] {
     return [
-      "x-ai/grok-4.1-fast:free",
+      "tngtech/deepseek-r1t2-chimera:free",
       "openai/gpt-4-turbo",
       "openai/gpt-4",
       "openai/gpt-3.5-turbo",
@@ -174,17 +174,37 @@ export class OpenRouterService {
   }
 
   /**
+   * Clean reasoning output from chain-of-thought models (e.g., DeepSeek R1)
+   * Removes <think>...</think> blocks that contain the model's reasoning process
+   */
+  private cleanReasoningOutput(content: string): string {
+    // Remove complete <think>...</think> blocks
+    let cleaned = content.replace(/<think>[\s\S]*?<\/think>/gi, "");
+
+    // Remove unclosed <think> block at the start (when model didn't finish reasoning)
+    cleaned = cleaned.replace(/^<think>[\s\S]*$/gi, "");
+
+    // Remove any remaining <think> or </think> tags
+    cleaned = cleaned.replace(/<\/?think>/gi, "");
+
+    return cleaned.trim();
+  }
+
+  /**
    * Transform OpenRouter response to ChatResponse
    */
   private transformResponse(response: OpenRouterResponse, hasResponseFormat: boolean): ChatResponse {
     const choice = response.choices[0];
-    const content = choice.message.content;
+    const rawContent = choice.message.content;
+
+    // Clean reasoning output for chain-of-thought models
+    const content = this.cleanReasoningOutput(rawContent);
 
     return {
       id: response.id,
       model: response.model,
       content,
-      structuredData: hasResponseFormat ? JSON.parse(content) : undefined,
+      structuredData: hasResponseFormat ? JSON.parse(rawContent) : undefined,
       usage: {
         promptTokens: response.usage.prompt_tokens,
         completionTokens: response.usage.completion_tokens,

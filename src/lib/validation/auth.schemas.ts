@@ -4,7 +4,7 @@ import { z } from "zod";
  * Email validation schema
  * Validates email format
  */
-export const emailSchema = z.string().email("Please enter a valid email address").min(1, "Email is required");
+export const emailSchema = z.string().min(1, "Email is required").email("Please enter a valid email address");
 
 /**
  * Password validation schema
@@ -12,8 +12,8 @@ export const emailSchema = z.string().email("Please enter a valid email address"
  */
 export const passwordSchema = z
   .string()
-  .min(6, "Password must be at least 6 characters")
-  .min(1, "Password is required");
+  .min(1, "Password is required")
+  .min(6, "Password must be at least 6 characters");
 
 /**
  * Registration validation schema
