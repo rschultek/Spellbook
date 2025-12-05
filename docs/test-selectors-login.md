@@ -67,8 +67,8 @@ test("login with valid credentials", async ({ page }) => {
   // Act
   await loginPage.login(testUsers.valid.email, testUsers.valid.password);
 
-  // Assert - verify via Supabase auth cookie (most reliable method)
-  await loginPage.expectAuthCookieExists();
+  // Assert - verify via UI redirection (more reliable than cookie check for SSR)
+  await loginPage.expectLoginSuccess();
 });
 ```
 
@@ -97,7 +97,7 @@ test("login with valid credentials", async ({ page }) => {
 **Assertions:**
 
 - `expectToBeOnLoginPage()` - Verify on login page
-- `expectAuthCookieExists()` - Verify successful login via Supabase auth cookie (recommended)
+- `expectLoginSuccess()` - Verify successful login via redirect (recommended)
 - `expectSuccessMessage(message?)` - Verify success toast message
 - `expectEmailError(message?)` - Verify email error
 - `expectPasswordError(message?)` - Verify password error
@@ -145,17 +145,15 @@ await expect(submitButton).toHaveText("Logging in...");
 ### Krok 4: Potwierdź zalogowanie
 
 ```typescript
-// Zalecane: Sprawdź auth cookie Supabase (najbardziej niezawodna metoda)
-const cookies = await page.context().cookies();
-const authCookie = cookies.find((c) => c.name.includes("sb-") && c.name.includes("auth"));
-expect(authCookie).toBeDefined();
+// Zalecane: Sprawdź pomyślne logowanie (oczekiwanie na przekierowanie)
+await loginPage.expectLoginSuccess();
 
-// Alternatywnie: Czekaj na przekierowanie do strony snippets
+// Alternatywnie (bezpośrednio Playwright):
 await page.waitForURL("/snippets");
 ```
 
-**Uwaga:** Przekierowanie następuje przez `window.location.href = returnUrl` w [`LoginForm.tsx`](/workspace/kurs/Spellbook/src/components/auth/LoginForm.tsx) (linia 37).
-Sprawdzenie auth cookie jest bardziej niezawodne niż czekanie na toast lub przekierowanie.
+**Uwaga:** Przekierowanie następuje po krótkim opóźnieniu (1s) zdefiniowanym w `LoginForm.tsx`.
+Metoda `expectLoginSuccess()` w Page Object obsługuje to oczekiwanie.
 
 ---
 
@@ -209,7 +207,7 @@ await expect(page).toHaveURL("/register");
 ```typescript
 import { test, expect } from "@playwright/test";
 
-test.describe("Login Flow", () => {
+test.describe.serial("Login Flow", () => {
   test("should successfully log in with valid credentials", async ({ page }) => {
     // 1. Nawiguj do strony logowania
     await page.goto("/login");
@@ -224,16 +222,8 @@ test.describe("Login Flow", () => {
     // 4. Kliknij przycisk logowania
     await page.getByTestId("login-submit-button").click();
 
-    // 5. Potwierdź zalogowanie przez sprawdzenie auth cookie
-    await expect
-      .poll(
-        async () => {
-          const cookies = await page.context().cookies();
-          return cookies.find((c) => c.name.includes("sb-") && c.name.includes("auth"));
-        },
-        { timeout: 5000 }
-      )
-      .toBeDefined();
+    // 5. Potwierdź zalogowanie przez sprawdzenie przekierowania
+    await expect(page).toHaveURL("/snippets");
   });
 
   test("should show validation errors for empty fields", async ({ page }) => {

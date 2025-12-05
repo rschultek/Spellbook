@@ -12,7 +12,7 @@ import { testUsers } from "../fixtures/test-users";
  *
  * Uses Page Object Model pattern for maintainability.
  */
-test.describe("Login Flow", () => {
+test.describe.serial("Login Flow", () => {
   let loginPage: LoginPage;
 
   test.beforeEach(async ({ page }) => {
@@ -28,9 +28,8 @@ test.describe("Login Flow", () => {
     // Act: Perform login with valid credentials from .env.test
     await loginPage.login(testUsers.valid.email, testUsers.valid.password);
 
-    // Assert: Verify successful login via Supabase auth cookie
-    // We check for auth cookie instead of toast message as it's more reliable
-    await loginPage.expectAuthCookieExists();
+    // Assert: Verify successful login via UI redirection
+    await loginPage.expectLoginSuccess();
   });
 
   test("should show validation errors for empty fields", async () => {

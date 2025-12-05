@@ -38,6 +38,8 @@ export class LoginPage extends BasePage {
    */
   async goto(): Promise<void> {
     await super.goto("/login");
+    // Wait for network to be idle to ensure hydration is complete
+    await this.page.waitForLoadState("networkidle");
   }
 
   /**
@@ -145,22 +147,11 @@ export class LoginPage extends BasePage {
   }
 
   /**
-   * Verify that Supabase auth cookie exists after successful login
-   * Supabase stores auth tokens in cookies with names containing 'sb-' and 'auth'
-   * Uses polling to wait for the cookie to appear (max 10 seconds)
+   * Verify that authentication was successful by checking redirect
+   * This is more reliable than checking cookies which names can vary
    */
-  async expectAuthCookieExists(): Promise<void> {
-    await expect
-      .poll(
-        async () => {
-          const cookies = await this.page.context().cookies();
-          return cookies.find((c) => c.name.includes("sb-") && c.name.includes("auth"));
-        },
-        {
-          message: "Expected Supabase auth cookie to exist after login",
-          timeout: 5000,
-        }
-      )
-      .toBeDefined();
+  async expectLoginSuccess(): Promise<void> {
+    // Wait for redirect to snippets page
+    await this.waitForRedirect();
   }
 }

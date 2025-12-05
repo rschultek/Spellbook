@@ -21,5 +21,5 @@ alwaysApply: false
 - Leverage trace viewer for debugging test failures
 - Implement test hooks for setup and teardown
 - Use expect assertions with specific matchers
-- Leverage parallel execution for faster test runs
+- Leverage parallel execution for stateless tests; use `test.describe.serial` for stateful auth flows
 - Follow 'Arrange', 'Act', 'Assert' approach to test structure for simplicity and readability.
