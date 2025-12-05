@@ -1,0 +1,72 @@
+name: Pull Request CI
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: ./.github/actions/setup
+
+      - name: Run ESLint
+        run: npm run lint
+
+  unit-test:
+    name: Unit Tests
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: ./.github/actions/setup
+
+      - name: Run unit tests with coverage
+        run: npm run test:coverage
+
+      - name: Upload unit test coverage
+        uses: actions/upload-artifact@v5
+        with:
+          name: unit-coverage
+          path: coverage/
+          retention-days: 7
+
+  status-comment:
+    name: PR Status Comment
+    needs: [lint, unit-test]
+    if: success()
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Download unit coverage
+        uses: actions/download-artifact@v6
+        with:
+          name: unit-coverage
+          path: unit-coverage/
+
+      - name: Create success comment
+        uses: peter-evans/create-or-update-comment@v5
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ## ✅ CI Pipeline Passed
+
+            | Check | Status |
+            |-------|--------|
+            | Lint | ✅ Passed |
+            | Unit Tests | ✅ Passed |
+
+            ### 📊 Artifacts
+            - **Unit Test Coverage**: Available in workflow artifacts
+
+            ---
+            *Commit: ${{ github.sha }}*
