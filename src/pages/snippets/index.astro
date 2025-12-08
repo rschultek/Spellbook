@@ -57,7 +57,24 @@ if (searchQuery || (languageFilter && languageFilter !== "All")) {
           Found {snippets.length} snippet{snippets.length !== 1 ? "s" : ""}
           {languageFilter !== "All" && ` in ${languageFilter}`}
           {searchQuery && ` matching "${searchQuery}"`}
-          <a href="/snippets" class="ml-2 text-blue-600 hover:underline">
+          <a
+            href="/snippets"
+            class="ml-2 inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium bg-destructive/10 text-destructive hover:bg-destructive/20 rounded-full transition-colors"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M18 6 6 18" />
+              <path d="m6 6 12 12" />
+            </svg>
             Clear filters
           </a>
         </p>

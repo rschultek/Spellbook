@@ -22,7 +22,11 @@ const returnUrl = Astro.url.searchParams.get("return") || "/snippets";
       <div class="text-center mt-4 space-y-2">
         <p>
           Don't have an account?
-          <a href="/register" class="text-blue-600 hover:underline" data-testid="register-link">Sign up</a>
+          <a
+            href="/register"
+            class="text-primary hover:underline hover:text-primary/80 transition-colors"
+            data-testid="register-link">Sign up</a
+          >
         </p>
       </div>
     </div>

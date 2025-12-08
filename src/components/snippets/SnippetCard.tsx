@@ -5,17 +5,17 @@ interface Props {
 }
 
 const LANGUAGE_COLORS: Record<string, string> = {
-  JavaScript: "bg-yellow-100 text-yellow-800",
-  TypeScript: "bg-blue-100 text-blue-800",
-  Python: "bg-green-100 text-green-800",
-  PHP: "bg-purple-100 text-purple-800",
-  Bash: "bg-gray-100 text-gray-800",
-  CSS: "bg-pink-100 text-pink-800",
-  HTML: "bg-orange-100 text-orange-800",
-  JSON: "bg-teal-100 text-teal-800",
-  MySQL: "bg-indigo-100 text-indigo-800",
-  Note: "bg-amber-100 text-amber-800",
-  Other: "bg-slate-100 text-slate-800",
+  JavaScript: "bg-yellow-500/10 text-yellow-500 ring-1 ring-yellow-500/20",
+  TypeScript: "bg-blue-500/10 text-blue-500 ring-1 ring-blue-500/20",
+  Python: "bg-green-500/10 text-green-500 ring-1 ring-green-500/20",
+  PHP: "bg-purple-500/10 text-purple-500 ring-1 ring-purple-500/20",
+  Bash: "bg-zinc-500/10 text-zinc-400 ring-1 ring-zinc-500/20",
+  CSS: "bg-pink-500/10 text-pink-500 ring-1 ring-pink-500/20",
+  HTML: "bg-orange-500/10 text-orange-500 ring-1 ring-orange-500/20",
+  JSON: "bg-teal-500/10 text-teal-500 ring-1 ring-teal-500/20",
+  MySQL: "bg-indigo-500/10 text-indigo-500 ring-1 ring-indigo-500/20",
+  Note: "bg-amber-500/10 text-amber-500 ring-1 ring-amber-500/20",
+  Other: "bg-slate-500/10 text-slate-400 ring-1 ring-slate-500/20",
 };
 
 export default function SnippetCard({ snippet }: Props) {
@@ -37,17 +37,19 @@ export default function SnippetCard({ snippet }: Props) {
   return (
     <a
       href={`/snippets/${snippet.id}`}
-      className="block p-6 bg-white border rounded-lg hover:shadow-lg transition-shadow"
+      className="block p-6 bg-card border rounded-lg hover:shadow-lg transition-all hover:bg-card/80 hover:border-primary/50 group"
     >
       <div className="flex items-start justify-between mb-2">
-        <h3 className="text-lg font-semibold truncate flex-1">{snippet.title}</h3>
-        <span className={`px-2 py-1 text-xs rounded-full ${colorClass}`}>{snippet.language}</span>
+        <h3 className="text-lg font-semibold truncate flex-1 text-card-foreground group-hover:text-primary transition-colors">
+          {snippet.title}
+        </h3>
+        <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${colorClass}`}>{snippet.language}</span>
       </div>
 
-      {snippet.description && <p className="text-gray-600 text-sm mb-3">{snippet.description}</p>}
+      {snippet.description && <p className="text-muted-foreground text-sm mb-3">{snippet.description}</p>}
 
-      <pre className="bg-gray-50 p-3 rounded text-xs font-mono overflow-hidden mb-3">
-        <code className="text-gray-700">
+      <pre className="bg-black/30 p-3 rounded text-xs font-mono overflow-hidden mb-3 border border-white/10">
+        <code className="text-blue-100/90">
           {preview}
           {needsEllipsis && "..."}
         </code>
@@ -56,14 +58,14 @@ export default function SnippetCard({ snippet }: Props) {
       {snippet.tags && snippet.tags.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-3">
           {snippet.tags.map((tag) => (
-            <span key={tag} className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">
+            <span key={tag} className="px-2 py-1 bg-secondary text-secondary-foreground text-xs rounded">
               #{tag}
             </span>
           ))}
         </div>
       )}
 
-      <p className="text-xs text-gray-500">Created {formatDate(snippet.created_at)}</p>
+      <p className="text-xs text-muted-foreground">Created {formatDate(snippet.created_at)}</p>
     </a>
   );
 }

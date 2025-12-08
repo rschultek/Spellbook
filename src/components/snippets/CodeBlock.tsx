@@ -131,11 +131,11 @@ export default function CodeBlock({ code, language, showLineNumbers = true }: Co
       </div>
 
       {isLoading ? (
-        <div className="bg-gray-900 text-gray-100 p-6 rounded-lg overflow-x-auto">
+        <div className="bg-muted/30 text-muted-foreground p-6 rounded-lg overflow-x-auto border border-border">
           <div className="animate-pulse">
-            <div className="h-4 bg-gray-700 rounded w-3/4 mb-2"></div>
-            <div className="h-4 bg-gray-700 rounded w-1/2 mb-2"></div>
-            <div className="h-4 bg-gray-700 rounded w-5/6"></div>
+            <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
+            <div className="h-4 bg-muted rounded w-1/2 mb-2"></div>
+            <div className="h-4 bg-muted rounded w-5/6"></div>
           </div>
         </div>
       ) : (
@@ -148,7 +148,7 @@ export default function CodeBlock({ code, language, showLineNumbers = true }: Co
       {/* Explanation Modal */}
       {showExplanationModal && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+          className="fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4 z-50"
           onClick={() => setShowExplanationModal(false)}
           onKeyDown={(e) => e.key === "Escape" && setShowExplanationModal(false)}
           role="button"
@@ -157,7 +157,7 @@ export default function CodeBlock({ code, language, showLineNumbers = true }: Co
         >
           {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
           <div
-            className="bg-white rounded-lg max-w-2xl w-full p-6"
+            className="bg-card text-card-foreground border shadow-lg rounded-lg max-w-2xl w-full p-6"
             onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => e.stopPropagation()}
             role="dialog"
@@ -170,14 +170,14 @@ export default function CodeBlock({ code, language, showLineNumbers = true }: Co
               </h2>
               <button
                 onClick={() => setShowExplanationModal(false)}
-                className="text-gray-500 hover:text-gray-700 text-2xl leading-none"
+                className="text-muted-foreground hover:text-foreground text-2xl leading-none"
               >
                 ×
               </button>
             </div>
 
-            <div className="prose max-w-none">
-              <p className="text-gray-700 whitespace-pre-wrap">{explanation}</p>
+            <div className="prose prose-invert max-w-none">
+              <p className="text-muted-foreground whitespace-pre-wrap">{explanation}</p>
             </div>
 
             <div className="mt-6 flex justify-end">
@@ -192,6 +192,8 @@ export default function CodeBlock({ code, language, showLineNumbers = true }: Co
           margin: 0;
           padding: 1.5rem;
           border-radius: 0.5rem;
+          background-color: rgb(0 0 0 / 0.3) !important; /* Force darker background */
+          border: 1px solid rgb(255 255 255 / 0.1);
         }
 
         .shiki-wrapper code {
@@ -200,6 +202,7 @@ export default function CodeBlock({ code, language, showLineNumbers = true }: Co
           line-height: 1.5;
           counter-reset: line;
           display: grid; /* Fixes double spacing by ignoring whitespace between lines */
+          background-color: transparent !important;
         }
 
         .shiki-wrapper.with-line-numbers code .line::before {

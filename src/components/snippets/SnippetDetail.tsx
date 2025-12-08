@@ -20,8 +20,25 @@ export default function SnippetDetail({ snippet }: Props) {
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <a href="/snippets" className="text-blue-600 hover:underline">
-          ← Back to snippets
+        <a
+          href="/snippets"
+          className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-2 rounded-md hover:bg-muted/50"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="m12 19-7-7 7-7" />
+            <path d="M19 12H5" />
+          </svg>
+          Back to snippets
         </a>
         <div className="flex gap-2">
           <a href={`/snippets/${snippet.id}/edit`}>
@@ -36,21 +53,21 @@ export default function SnippetDetail({ snippet }: Props) {
       {/* Title and Language */}
       <div className="mb-6">
         <h1 className="text-3xl font-bold mb-2">{snippet.title}</h1>
-        <div className="flex items-center gap-4 text-sm text-gray-600">
-          <span className="font-medium">{snippet.language}</span>
+        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+          <span className="font-medium text-foreground">{snippet.language}</span>
           <span>Created {formatDate(snippet.created_at)}</span>
           {snippet.updated_at !== snippet.created_at && <span>Updated {formatDate(snippet.updated_at)}</span>}
         </div>
       </div>
 
       {/* Description */}
-      {snippet.description && <p className="text-gray-700 mb-6">{snippet.description}</p>}
+      {snippet.description && <p className="text-muted-foreground mb-6">{snippet.description}</p>}
 
       {/* Tags */}
       {snippet.tags && snippet.tags.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-6">
           {snippet.tags.map((tag) => (
-            <span key={tag} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
+            <span key={tag} className="px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm">
               #{tag}
             </span>
           ))}
@@ -62,10 +79,10 @@ export default function SnippetDetail({ snippet }: Props) {
 
       {/* Delete Modal - Simple version */}
       {showDeleteModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-md w-full p-6">
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-card border text-card-foreground rounded-lg max-w-md w-full p-6 shadow-lg">
             <h2 className="text-xl font-bold mb-4">Delete Snippet</h2>
-            <p className="text-gray-700 mb-6">
+            <p className="text-muted-foreground mb-6">
               Are you sure you want to delete &quot;<strong>{snippet.title}</strong>&quot;? This action cannot be
               undone.
             </p>

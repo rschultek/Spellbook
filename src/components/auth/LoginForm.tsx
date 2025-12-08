@@ -57,7 +57,7 @@ export default function LoginForm({ returnUrl = "/snippets" }: Props) {
           {...register("email")}
           type="text"
           id="email"
-          className="w-full px-3 py-2 border rounded-md"
+          className="w-full px-3 py-2 border rounded-md bg-background text-foreground"
           data-testid="login-email-input"
         />
         {errors.email && (
@@ -75,7 +75,7 @@ export default function LoginForm({ returnUrl = "/snippets" }: Props) {
           {...register("password")}
           type="password"
           id="password"
-          className="w-full px-3 py-2 border rounded-md"
+          className="w-full px-3 py-2 border rounded-md bg-background text-foreground"
           autoComplete="current-password"
           data-testid="login-password-input"
         />
