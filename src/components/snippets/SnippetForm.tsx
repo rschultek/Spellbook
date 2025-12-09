@@ -5,7 +5,7 @@ import { SnippetsService } from "../../lib/services/snippets.service";
 import { Button } from "../ui/button";
 import { toast } from "../../lib/utils/toast";
 import { SNIPPET_LANGUAGES } from "../../types";
-import type { CreateSnippetDto, SnippetResponseDto } from "../../types";
+import type { CreateSnippetDto, SnippetLanguage, SnippetResponseDto } from "../../types";
 import { getSupabaseBrowserClient } from "../../lib/utils/supabase-browser";
 
 interface Props {
@@ -24,14 +24,14 @@ export default function SnippetForm({ mode, initialData }: Props) {
       ? {
           title: initialData.title,
           content: initialData.content,
-          language: initialData.language,
+          language: initialData.language as SnippetLanguage,
           description: initialData.description,
           tags: initialData.tags || [],
         }
       : {
           title: "",
           content: "",
-          language: "Other",
+          language: "Other" as SnippetLanguage,
           description: "",
           tags: [],
         },

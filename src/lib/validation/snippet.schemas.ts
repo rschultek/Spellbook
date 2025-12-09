@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { SnippetLanguage } from "../../types";
 import { SNIPPET_LANGUAGES, VALIDATION_CONSTRAINTS } from "../../types";
 
 /**
@@ -14,7 +15,7 @@ export const createSnippetSchema = z.object({
 
   content: z.string().min(VALIDATION_CONSTRAINTS.content.min, "Content is required"),
 
-  language: z.enum(SNIPPET_LANGUAGES as [string, ...string[]], {
+  language: z.enum(SNIPPET_LANGUAGES as readonly [SnippetLanguage, ...SnippetLanguage[]], {
     errorMap: () => ({ message: "Please select a language" }),
   }),
 
@@ -41,5 +42,5 @@ export const updateSnippetSchema = createSnippetSchema.partial();
  */
 export const searchQuerySchema = z.object({
   query: z.string().optional(),
-  language: z.enum([...SNIPPET_LANGUAGES, "All"] as [string, ...string[]]).optional(),
+  language: z.enum(["All", ...SNIPPET_LANGUAGES] as ["All", ...SnippetLanguage[]]).optional(),
 });

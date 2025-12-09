@@ -160,19 +160,19 @@ For detailed schema documentation, see [`.ai/db-plan.md`](.ai/db-plan.md).
 
 ## Available Scripts
 
-| Script             | Description                                  |
-| ------------------ | -------------------------------------------- |
-| `npm run dev`      | Start the development server with hot reload |
-| `npm run build`    | Build the production application             |
-| `npm run preview`  | Preview the production build locally         |
-| `npm run lint`     | Run ESLint to check code quality             |
-| `npm run lint:fix` | Run ESLint and automatically fix issues      |
-| `npm run format`   | Format code using Prettier                   |
-| `npm run test`     | Run unit tests with Vitest                   |
-| `npm run test:watch` | Run unit tests in watch mode               |
-| `npm run test:coverage` | Run tests with coverage report          |
-| `npm run test:e2e` | Run E2E tests with Playwright                |
-| `npm run test:e2e:ui` | Run E2E tests with Playwright UI          |
+| Script                  | Description                                  |
+| ----------------------- | -------------------------------------------- |
+| `npm run dev`           | Start the development server with hot reload |
+| `npm run build`         | Build the production application             |
+| `npm run preview`       | Preview the production build locally         |
+| `npm run lint`          | Run ESLint to check code quality             |
+| `npm run lint:fix`      | Run ESLint and automatically fix issues      |
+| `npm run format`        | Format code using Prettier                   |
+| `npm run test`          | Run unit tests with Vitest                   |
+| `npm run test:watch`    | Run unit tests in watch mode                 |
+| `npm run test:coverage` | Run tests with coverage report               |
+| `npm run test:e2e`      | Run E2E tests with Playwright                |
+| `npm run test:e2e:ui`   | Run E2E tests with Playwright UI             |
 
 ## Project Scope
 

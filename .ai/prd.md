@@ -25,6 +25,7 @@ Stack technologiczny:
 - Deployment: Localhost (produkcyjne wdrożenie opcjonalne)
 
 Zrealizowane rozszerzenia MVP:
+
 - ✅ Syntax highlighting z Shiki
 - ✅ AI Code Explain feature (OpenRouter)
 - ✅ Testy jednostkowe (Vitest)
@@ -764,16 +765,20 @@ Monitoring plan (post-MVP):
 ✅ Success milestones achieved:
 
 Week 1:
+
 - ✅ Setup kompletny, auth działa, basic UI gotowy
 
 Week 2:
+
 - ✅ Full CRUD działa, search działa, filters działają
 
 Week 3:
+
 - ✅ Tests działają, CI/CD działa, dokumentacja kompletna
 - ✅ Dodatkowe features: syntax highlighting, AI explain
 
 ✅ Final success:
+
 - ✅ Wszystkie user stories zaimplementowane
 - ✅ Wszystkie acceptance criteria spełnione
 - ✅ Projekt gotowy do prezentacji/oddania
@@ -789,6 +794,7 @@ Week 3:
 **Author:** Product Manager / Developer
 
 **Changelog:**
+
 - v4.0 (2025-12-09): Zaktualizowano status projektu - MVP Complete + rozszerzenia (syntax highlighting, AI explain, unit tests)
 - v3.1 (2025-12-09): Aktualizacja tech stack (React 19, Tailwind 4)
 - v3.0 (2025-11-28): Kompletny PRD dla MVP

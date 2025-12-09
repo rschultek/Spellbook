@@ -160,7 +160,7 @@ export default defineConfig({
 ```javascript
 // tailwind.config.js (Tailwind 4 with Vite plugin)
 export default {
-  content: ['./src/**/*.{astro,html,js,jsx,ts,tsx}'],
+  content: ["./src/**/*.{astro,html,js,jsx,ts,tsx}"],
   theme: {
     extend: {
       colors: {
@@ -169,7 +169,7 @@ export default {
     },
   },
   plugins: [],
-}
+};
 ```
 
 ---
@@ -930,6 +930,7 @@ graph TB
 **Coverage:** 80%+ for utility functions
 
 **Test Files:**
+
 ```
 src/__tests__/
 ├── setup.ts
@@ -1333,5 +1334,6 @@ export type Database = {
 **Status:** ✅ Complete - MVP + Extensions delivered
 
 **Changelog:**
+
 - v2.0 (2025-12-09): Zaktualizowano do React 19, Tailwind 4, dodano Shiki, Vitest, OpenRouter, nowe komponenty
 - v1.0 (2024-11-24): Początkowa architektura techniczna MVP

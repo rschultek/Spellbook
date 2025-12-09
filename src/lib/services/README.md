@@ -218,6 +218,7 @@ constructor(apiKey: string, options?: OpenRouterServiceOptions)
 **Aktualne użycie w projekcie:**
 
 W `/api/explain` endpoint używamy modelu `tngtech/deepseek-r1t2-chimera:free` z:
+
 - Skróconym timeout: 15s
 - Temperaturą: 0.3 (dla zwięzłości)
 - Max tokens: 500
