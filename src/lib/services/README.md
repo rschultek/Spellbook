@@ -4,7 +4,11 @@ Service dla komunikacji z OpenRouter API w projekcie Spellbook.
 
 ## Przegląd
 
-OpenRouter Service umożliwia komunikację z różnymi modelami AI (GPT-4, Claude, Grok, etc.) przez ujednolicone API OpenRouter. Obsługuje zarówno zwykłe chat completions jak i structured output z JSON Schema.
+OpenRouter Service umożliwia komunikację z różnymi modelami AI (GPT-4, Claude, Grok, DeepSeek, etc.) przez ujednolicone API OpenRouter. Obsługuje zarówno zwykłe chat completions jak i structured output z JSON Schema.
+
+**Status:** ✅ Zaimplementowany i działający w produkcji  
+**Główne użycie:** AI Code Explanation feature w komponencie CodeBlock  
+**Domyślny model:** DeepSeek R1 Turbo Chimera (free tier)
 
 ## Instalacja i Konfiguracja
 
@@ -128,7 +132,40 @@ const metadata = response.structuredData as {
 };
 ```
 
-### Detekcja Języka Kodu (Use Case dla Spellbook)
+### ✅ Code Explanation (Zrealizowany Use Case w Spellbook)
+
+```typescript
+// Użycie w /api/explain endpoint
+const response = await service.chat({
+  messages: [
+    {
+      role: "system",
+      content:
+        "Jesteś pomocnym asystentem programisty. Odpowiadasz ZAWSZE po polsku, ZAWSZE w maksymalnie 2-3 krótkich zdaniach.",
+    },
+    {
+      role: "user",
+      content: `Co robi ten kod (${language})? Odpowiedz w 2-3 zdaniach:\n\n${code}`,
+    },
+  ],
+  model: "tngtech/deepseek-r1t2-chimera:free",
+  maxTokens: 500,
+  temperature: 0.3,
+});
+
+// Zwracamy wyjaśnienie do UI
+return { explanation: response.content };
+```
+
+**Integracja z UI:**
+
+- Przycisk "💡 Explain" w komponencie `CodeBlock`
+- Rate limiting: 3 sekundy między requestami (client-side throttle)
+- Modal z wyjaśnieniem po kliknięciu
+- Loading state podczas przetwarzania
+- Error handling z user-friendly komunikatami
+
+### Detekcja Języka Kodu (Możliwy przyszły Use Case)
 
 ```typescript
 const response = await service.chat({
@@ -136,7 +173,7 @@ const response = await service.chat({
     { role: "system", content: "You are a code language detector." },
     { role: "user", content: userCodeSnippet },
   ],
-  model: "x-ai/grok-beta",
+  model: "tngtech/deepseek-r1t2-chimera:free",
   responseFormat: {
     type: "json_schema",
     json_schema: {
@@ -173,10 +210,18 @@ constructor(apiKey: string, options?: OpenRouterServiceOptions)
 **Opcje:**
 
 - `baseUrl`: URL API (domyślnie: `https://openrouter.ai/api/v1`)
-- `defaultModel`: Domyślny model (domyślnie: `x-ai/grok-beta`)
-- `timeout`: Timeout w ms (domyślnie: 30000)
+- `defaultModel`: Domyślny model (domyślnie: `tngtech/deepseek-r1t2-chimera:free`)
+- `timeout`: Timeout w ms (domyślnie: 30000, w explain endpoint: 15000)
 - `retries`: Liczba ponownych prób (domyślnie: 3)
 - `headers`: Dodatkowe nagłówki HTTP
+
+**Aktualne użycie w projekcie:**
+
+W `/api/explain` endpoint używamy modelu `tngtech/deepseek-r1t2-chimera:free` z:
+- Skróconym timeout: 15s
+- Temperaturą: 0.3 (dla zwięzłości)
+- Max tokens: 500
+- System prompt w języku polskim
 
 ### `chat()` Method
 
@@ -259,6 +304,12 @@ Przykłady komunikatów błędów:
 - `Request timeout. The AI model took too long to respond.` (timeout)
 - `Network error. Please check your internet connection.` (network)
 
+**Komunikaty w /api/explain endpoint (po polsku):**
+
+- `Za dużo zapytań. Poczekaj chwilę i spróbuj ponownie.` (rate limit)
+- `Nie udało się wygenerować wyjaśnienia. Spróbuj ponownie.` (ogólny błąd)
+- Client-side throttling: `Poczekaj jeszcze Xs przed kolejnym wyjaśnieniem`
+
 ## Bezpieczeństwo
 
 ✅ **ROBIMY:**
@@ -315,12 +366,23 @@ src/
 - Zwiększ `timeout` w options konstruktora
 - Użyj szybszego modelu (np. `grok-beta` zamiast `gpt-4`)
 
-## Roadmap
+## ✅ Zrealizowane Features
 
-Przyszłe funkcjonalności (poza zakresem MVP):
+- ✅ Basic chat completions
+- ✅ Error handling z retry logic
+- ✅ Timeout configuration
+- ✅ Rate limiting (client-side throttling w UI)
+- ✅ Code explanation endpoint
+- ✅ User-friendly error messages (PL)
 
-- Streaming responses
+## Roadmap (v2+)
+
+Przyszłe funkcjonalności:
+
+- Streaming responses (dla dłuższych wyjaśnień)
 - Token counting przed requestem
-- Cache dla częstych zapytań
-- Rate limiting po stronie aplikacji
-- Monitoring i logging kosztów
+- Server-side cache dla identycznych zapytań
+- Server-side rate limiting (obecnie tylko client-side)
+- Monitoring i logging kosztów API
+- Auto-detect language feature
+- Code translation between languages

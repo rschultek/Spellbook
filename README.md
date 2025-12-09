@@ -4,9 +4,10 @@ A modern, personal web application for managing programming notes, code snippets
 
 [![Node.js Version](https://img.shields.io/badge/node-22.14.0-brightgreen)](https://nodejs.org/)
 [![Astro](https://img.shields.io/badge/Astro-5.13-FF5D01?logo=astro)](https://astro.build)
-[![React](https://img.shields.io/badge/React-18.3-61DAFB?logo=react)](https://react.dev)
+[![React](https://img.shields.io/badge/React-19.1-61DAFB?logo=react)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.x-38B2AC?logo=tailwind-css)](https://tailwindcss.com)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1-38B2AC?logo=tailwind-css)](https://tailwindcss.com)
+[![Tests](https://img.shields.io/badge/Tests-Playwright%20%2B%20Vitest-45ba4b)](https://playwright.dev)
 
 ## 📖 Table of Contents
 
@@ -26,8 +27,12 @@ A modern, personal web application for managing programming notes, code snippets
 - 🔍 Search and filter snippets with full-text search
 - 🏷️ Categorize using languages and tags
 - ✏️ Full CRUD operations (Create, Read, Update, Delete)
+- 🎨 Syntax highlighting for all major programming languages (Shiki)
+- 🤖 AI-powered code explanations (OpenRouter)
+- 📋 Copy to clipboard functionality
 - 🔒 Secure with user authentication and Row Level Security
 - 📱 Access from any device with responsive design
+- ✅ Comprehensive testing (E2E + Unit tests)
 
 This project is part of the **10xDevs course** and serves as a learning project to master modern web development with React, TypeScript, and Backend-as-a-Service architecture.
 
@@ -35,13 +40,15 @@ This project is part of the **10xDevs course** and serves as a learning project 
 
 ### Frontend
 
-- **[Astro 5](https://astro.build)** - Meta-framework for fast, content-focused websites
-- **[React 18.3](https://react.dev)** - UI library for interactive components
+- **[Astro 5.13](https://astro.build)** - Meta-framework for fast, content-focused websites
+- **[React 19.1](https://react.dev)** - UI library for interactive components with improved performance
 - **[TypeScript 5](https://www.typescriptlang.org/)** - Type-safe JavaScript
-- **[Tailwind CSS 3.x](https://tailwindcss.com)** - Utility-first CSS framework
+- **[Tailwind CSS 4.1](https://tailwindcss.com)** - Utility-first CSS framework with Vite plugin
 - **[Shadcn/ui](https://ui.shadcn.com/)** - Re-usable component library
 - **[React Hook Form](https://react-hook-form.com/)** - Performant form management
 - **[Zod](https://zod.dev/)** - TypeScript-first schema validation
+- **[Shiki 3.17](https://shiki.style/)** - Syntax highlighting with 100+ languages support
+- **[Lucide React](https://lucide.dev/)** - Beautiful & consistent icon toolkit
 
 ### Backend (BaaS)
 
@@ -51,9 +58,18 @@ This project is part of the **10xDevs course** and serves as a learning project 
   - Row Level Security (RLS) for data protection
   - Real-time capabilities (optional)
 
+### AI Services
+
+- **[OpenRouter](https://openrouter.ai/)** - Unified API for AI models
+  - Code explanation feature
+  - DeepSeek R1 Turbo Chimera model (free tier)
+  - Rate limiting and error handling
+
 ### Testing & CI/CD
 
-- **[Playwright](https://playwright.dev/)** - End-to-end testing
+- **[Playwright](https://playwright.dev/)** - End-to-end testing with Page Object Model
+- **[Vitest](https://vitest.dev/)** - Unit testing with 80%+ coverage for utilities
+- **[Testing Library](https://testing-library.com/)** - React component testing
 - **[GitHub Actions](https://github.com/features/actions)** - CI/CD pipeline
 - **[ESLint](https://eslint.org/)** + **[Prettier](https://prettier.io/)** - Code quality tools
 
@@ -152,6 +168,11 @@ For detailed schema documentation, see [`.ai/db-plan.md`](.ai/db-plan.md).
 | `npm run lint`     | Run ESLint to check code quality             |
 | `npm run lint:fix` | Run ESLint and automatically fix issues      |
 | `npm run format`   | Format code using Prettier                   |
+| `npm run test`     | Run unit tests with Vitest                   |
+| `npm run test:watch` | Run unit tests in watch mode               |
+| `npm run test:coverage` | Run tests with coverage report          |
+| `npm run test:e2e` | Run E2E tests with Playwright                |
+| `npm run test:e2e:ui` | Run E2E tests with Playwright UI          |
 
 ## Project Scope
 
@@ -166,9 +187,10 @@ For detailed schema documentation, see [`.ai/db-plan.md`](.ai/db-plan.md).
 - **Snippet Management (CRUD)**
   - Create new snippets with title, content, language, description, and tags
   - View snippet list with responsive grid layout
-  - View individual snippet details
+  - View individual snippet details with syntax highlighting
   - Edit existing snippets
   - Delete snippets with confirmation modal
+  - Copy snippet content to clipboard
 
 - **Search & Filtering**
   - Full-text search across title and content
@@ -182,19 +204,24 @@ For detailed schema documentation, see [`.ai/db-plan.md`](.ai/db-plan.md).
   - Row Level Security (RLS) for data isolation
 
 - **UX Features**
+  - Syntax highlighting for all code snippets (Shiki)
+  - AI-powered code explanations (OpenRouter)
   - Toast notifications for success/error messages
   - Loading states (skeleton screens, button spinners)
   - Empty state with call-to-action
   - Copy-to-clipboard for snippet content
   - Responsive design (mobile, tablet, desktop)
+  - Debounced search for better performance
 
 - **Testing & CI/CD**
-  - Minimum 1 E2E test (login + CRUD flow)
-  - GitHub Actions pipeline (build, type check, tests)
+  - E2E tests with Playwright (Page Object Model pattern)
+  - Unit tests with Vitest (80%+ coverage for utilities)
+  - GitHub Actions pipeline (build, type check, lint, tests)
+  - Automated test fixtures and helpers
 
 ## Project Status
 
-🚧 **Status**: Planning Complete - Ready for Implementation
+✅ **Status**: MVP Complete + Extensions
 
 This project is being developed as part of the **10xDevs course** with the following constraints:
 
@@ -205,13 +232,23 @@ This project is being developed as part of the **10xDevs course** with the follo
 
 ### Course Requirements Met
 
-- ✅ Authentication (Supabase Auth)
-- ✅ CRUD operations (Snippet management)
-- ✅ Business logic (Validation, search, filtering)
+- ✅ Authentication (Supabase Auth with middleware)
+- ✅ CRUD operations (Snippet management with service layer)
+- ✅ Business logic (Validation, search, filtering, RLS)
 - ✅ Product Requirements Document (PRD)
-- ✅ End-to-end tests (Playwright)
+- ✅ End-to-end tests (Playwright with Page Object Model)
+- ✅ Unit tests (Vitest with 80%+ coverage)
 - ✅ CI/CD pipeline (GitHub Actions)
 - ✅ Documentation (PRD, Tech Stack, Architecture)
+
+### Additional Features Beyond MVP
+
+- ✅ Syntax highlighting (Shiki)
+- ✅ AI code explanations (OpenRouter)
+- ✅ Copy to clipboard
+- ✅ Comprehensive testing strategy
+- ✅ Service layer architecture
+- ✅ Type-safe database operations
 
 ### Success Metrics
 

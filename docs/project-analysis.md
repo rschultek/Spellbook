@@ -93,13 +93,15 @@ Centralizacja rozproszonych notatek i snippetów w jednym miejscu z możliwości
 
 ### Frontend
 
-- **Astro 5** - najnowsza stabilna wersja
-- **React 18.3** - stabilny (nie bleeding edge 19)
+- **Astro 5.13** - najnowsza stabilna wersja z lepszym SSR
+- **React 19.1** - najnowsza stabilna z poprawioną wydajnością
 - **TypeScript 5** - liberal config dla łatwiejszej nauki
-- **Tailwind CSS 3.x** - stabilny (nie beta v4)
+- **Tailwind CSS 4.1** - najnowsza z Vite pluginem
 - **Shadcn/ui** - gotowe, dostępne komponenty
 - **React Hook Form** - zarządzanie formularzami
 - **Zod** - walidacja schema
+- **Shiki 3.17** - syntax highlighting
+- **Lucide React** - wysokiej jakości ikony
 
 ### Backend (BaaS)
 
@@ -110,16 +112,23 @@ Centralizacja rozproszonych notatek i snippetów w jednym miejscu z możliwości
 
 ### Testing
 
-- **Playwright** - testy E2E
+- **Playwright** - testy E2E z Page Object Model
+- **Vitest** - testy jednostkowe z 80%+ coverage
 
 ### CI/CD
 
 - **GitHub Actions** - build + testy
 
+### AI Services (Rozszerzenie)
+
+- **OpenRouter.ai** - unified API dla modeli AI
+- **Model:** DeepSeek R1 Turbo Chimera (free)
+- **Features:** Code explanation z rate limiting
+
 ### Deployment
 
-- **Rozwój:** Localhost tylko (npm run dev)
-- **Produkcja:** POMINIĘTE (nie wymagane przez kurs)
+- **Rozwój:** Localhost (npm run dev)
+- **Produkcja:** Opcjonalny - gotowy do wdrożenia (Vercel/DigitalOcean)
 - **Baza danych:** Supabase Cloud (free tier)
 
 ---
@@ -245,18 +254,29 @@ Centralizacja rozproszonych notatek i snippetów w jednym miejscu z możliwości
 - ✅ Używasz Supabase (oszczędza ~10-13h vs custom backend)
 - ✅ Pomijasz deployment (oszczędza ~15-20h vs Docker)
 
-### MVP Definition of Done:
+### ✅ MVP Definition of Done - COMPLETED:
 
-1. ✅ Działające logowanie (Supabase Auth)
-2. ✅ Można dodać snippet (Supabase insert)
-3. ✅ Można wyświetlić listę snippetów (Supabase select)
-4. ✅ Można edytować snippet (Supabase update)
-5. ✅ Można usunąć snippet (Supabase delete)
-6. ✅ Można wyszukać snippet (PostgreSQL full-text search)
-7. ✅ Filtry działają (language, tags)
-8. ✅ Min. 1 test E2E działa (Playwright)
-9. ✅ CI/CD pipeline się wykonuje (GitHub Actions)
-10. ✅ Dokumentacja kompletna (PRD, tech stack, architecture)
+1. ✅ Działające logowanie (Supabase Auth + middleware)
+2. ✅ Można dodać snippet (Supabase insert via service layer)
+3. ✅ Można wyświetlić listę snippetów (Supabase select + syntax highlighting)
+4. ✅ Można edytować snippet (Supabase update via service layer)
+5. ✅ Można usunąć snippet (Supabase delete via service layer)
+6. ✅ Można wyszukać snippet (PostgreSQL full-text search + debounce)
+7. ✅ Filtry działają (language filter)
+8. ✅ Testy E2E działają (Playwright + Page Object Model)
+9. ✅ Testy jednostkowe działają (Vitest + 80% coverage)
+10. ✅ CI/CD pipeline się wykonuje (GitHub Actions)
+11. ✅ Dokumentacja kompletna (PRD, tech stack, architecture)
+
+### ✅ Zrealizowane rozszerzenia poza MVP:
+
+1. ✅ Syntax highlighting (Shiki) z github-dark theme
+2. ✅ AI code explanation (OpenRouter + DeepSeek R1)
+3. ✅ Copy to clipboard funkcjonalność
+4. ✅ Service layer architecture dla lepszej organizacji
+5. ✅ Page Object Model dla testów E2E
+6. ✅ Unit tests dla utilities (Vitest)
+7. ✅ Debounced search dla lepszej wydajności
 
 ---
 
@@ -271,19 +291,27 @@ Centralizacja rozproszonych notatek i snippetów w jednym miejscu z możliwości
 
 ---
 
-## 🚀 Następne kroki
+## ✅ Zrealizowane kroki
 
-1. ⬜ Setup Astro + React + TypeScript
-2. ⬜ Wybór auth solution (Clerk vs Auth.js)
-3. ⬜ Setup bazy danych (SQLite + ORM)
-4. ⬜ Pierwszy komponent (formularz snippet)
-5. ⬜ PRD szczegółowy
-   **Wersja:** 2.0  
-   **Utworzono:** 2025-11-24  
-   **Zaktualizowano:** 2025-11-24  
-   **Status:** ✅ Analiza zakończona + finalizacja stacku - Ready to implement
+1. ✅ Setup Astro + React + TypeScript
+2. ✅ Setup Supabase Auth + middleware
+3. ✅ Setup bazy danych (Supabase PostgreSQL + migrations)
+4. ✅ Komponenty React (auth, snippets, CodeBlock)
+5. ✅ PRD szczegółowy + architektura
+6. ✅ Full CRUD dla snippetów
+7. ✅ Search & filters
+8. ✅ Syntax highlighting (Shiki)
+9. ✅ AI code explanation (OpenRouter)
+10. ✅ Testy E2E + Unit
+11. ✅ CI/CD pipeline
+
+**Wersja:** 3.0  
+**Utworzono:** 2024-11-24  
+**Zaktualizowano:** 2025-12-09  
+**Status:** ✅ **Complete - MVP + Extensions delivered**
 
 **Changelog:**
 
-- v2.0 (2025-11-24): Zaktualizowano stack na Supabase BaaS, finalizacja wszystkich decyzji technicznych
-- v1.0 (2025-11-24): Początkowa analiza wykonalności
+- v3.0 (2025-12-09): Zaktualizowano status na Complete + dodano zrealizowane rozszerzenia
+- v2.0 (2024-11-24): Zaktualizowano stack na Supabase BaaS, finalizacja wszystkich decyzji technicznych
+- v1.0 (2024-11-24): Początkowa analiza wykonalności

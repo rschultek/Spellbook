@@ -4,8 +4,9 @@
 
 **Projekt:** Spellbook - aplikacja do zarządzania snippetami kodu  
 **Timeline:** 3 tygodnie (42 godziny, 2h/dzień)  
-**Zakres:** MVP - autentykacja, CRUD, wyszukiwanie, testy, CI/CD  
-**Deployment:** Lokalny (localhost) - bez produkcyjnego wdrożenia
+**Zakres:** MVP Complete + rozszerzenia (syntax highlighting, AI explain, unit tests)  
+**Deployment:** Lokalny (localhost) - produkcyjne wdrożenie opcjonalne  
+**Status:** ✅ Complete - MVP + Extensions delivered
 
 ---
 
@@ -13,13 +14,15 @@
 
 ### Frontend - Astro z React dla komponentów interaktywnych
 
-- **Astro 5** pozwala na tworzenie szybkich, wydajnych aplikacji z minimalną ilością JavaScript dzięki architekturze islands
-- **React 18.3** zapewni interaktywność tam gdzie jest potrzebna (formularze, search, filtry) - stabilna wersja z pełnym wsparciem
-- **TypeScript 5** dla statycznego typowania kodu i lepszego wsparcia IDE - z liberalną konfiguracją dla łatwiejszej nauki
-- **Tailwind CSS 3.x** pozwala na wygodne stylowanie aplikacji z gotowymi utility classes i responsive design
-- **Shadcn/ui** zapewnia bibliotekę dostępnych, pre-styled komponentów React (przyciski, inputy, dialogi, karty)
-- **React Hook Form** do zarządzania formularzami z minimalnym boilerplate
-- **Zod** dla walidacji schematów po stronie klienta i serwera z TypeScript inference
+- **Astro 5.13** - najnowsza wersja z szybszym SSR i lepszym wsparciem dla React 19
+- **React 19.1** - najnowsza stabilna wersja z poprawioną wydajnością i nowymi features
+- **TypeScript 5** - statyczne typowanie z dobrym balance między strict a liberal config
+- **Tailwind CSS 4.1** - najnowsza wersja z Vite pluginem i lepszą wydajnością
+- **Shadcn/ui** - biblioteka dostępnych, customizable komponentów React
+- **React Hook Form 7.66** - performant zarządzanie formularzami z minimalnym re-renderingiem
+- **Zod** - schema validation z TypeScript inference
+- **Shiki 3.17** - syntax highlighting po stronie serwera dla wszystkich języków
+- **Lucide React** - wysokiej jakości ikony SVG
 
 ### Backend - Supabase jako kompleksowe rozwiązanie backendowe (BaaS)
 
@@ -27,14 +30,18 @@
 - Zapewnia **SDK w JavaScript/TypeScript** (@supabase/supabase-js), które posłuży jako Backend-as-a-Service bez konieczności tworzenia własnych API routes
 - Jest rozwiązaniem **open source**, które można hostować lokalnie lub na własnym serwerze w przyszłości
 - Posiada **wbudowaną autentykację użytkowników** (email/password) z automatycznym haszowaniem haseł i zarządzaniem sesjami
+- Wykorzystuje **@supabase/ssr** dla bezpiecznej obsługi sesji w środowisku Astro SSR
 - Oferuje **Row Level Security (RLS)** - polityki bezpieczeństwa enforced na poziomie bazy danych
 - Zapewnia **Real-time subscriptions** (opcjonalna funkcja do wykorzystania w przyszłości)
 - Free tier wystarczający dla projektu (500MB bazy, 50K użytkowników miesięcznie)
 
 ### Testing
 
-- **Playwright** do testów End-to-End (E2E) - nowoczesne, szybkie narzędzie z świetnym wsparciem dla Astro
-- Minimum 1 test weryfikujący pełny flow użytkownika (login → create → edit → delete snippet)
+- **Playwright 1.57** - testy End-to-End (E2E) z Page Object Model pattern dla maintainability
+- **Vitest 4.0** - testy jednostkowe (unit tests) z coverage 80%+ dla utility functions
+- **Testing Library** - React Testing Library integration dla testów komponentów
+- **V8 Coverage Provider** - szybkie raporty pokrycia kodu
+- Tests setup: E2E z fixtures i page objects + unit tests dla utils
 
 ### CI/CD
 
@@ -42,29 +49,41 @@
 - Pipeline wykonuje: build aplikacji, TypeScript type check, uruchomienie testów Playwright
 - Automatyczne uruchamianie przy push i pull request
 
+### AI Services (Rozszerzenie poza MVP)
+
+- **OpenRouter.ai** - unified API dla różnych modeli AI (GPT-4, Claude, DeepSeek, Grok)
+- **Model:** DeepSeek R1 Turbo Chimera (free tier) - szybki, darmowy reasoning model
+- **Features:** Code explanation w języku polskim z rate limiting
+- **Integration:** Server-side API endpoints (/api/explain) z error handling
+
 ### Hosting i Deployment
 
-- **Development:** Localhost (npm run dev) - aplikacja działa tylko lokalnie
+- **Development:** Localhost (npm run dev) - aplikacja działa lokalnie
 - **Baza danych:** Supabase Cloud (free tier) - zarządzana w chmurze
-- **Production deployment:** Pominięty w MVP - nie jest wymagany przez kurs, focus na funkcjonalności
-- **Przyszłość (opcjonalnie):** Vercel dla frontendu (darmowy, prosty setup w 15 minut)
+- **Production deployment:** Opcjonalny - gotowe do wdrożenia na Vercel/DigitalOcean
+- **Przyszłość:** Vercel dla frontendu (zero-config deployment)
 
 ---
 
-## Czego NIE ma w MVP
+## ✅ Co zostało zrealizowane ponad MVP
 
-### AI/Advanced Features - Odłożone do v2
+### Zaimplementowane rozszerzenia
 
-- **Brak integracji AI w MVP** - proste reguły biznesowe wystarczą (walidacja, search, filtrowanie)
-- **Przyszłość:** Openrouter.ai dla funkcji AI (auto-detect języka, tłumaczenie między językami, AI tagging)
+- ✅ **Syntax highlighting** - Shiki 3.17 z github-dark theme i line numbers
+- ✅ **AI Code Explain** - OpenRouter integration z DeepSeek R1 model
+- ✅ **Unit tests** - Vitest z 80%+ coverage dla utils
+- ✅ **Page Object Model** - dla testów E2E (maintainability)
+- ✅ **Copy to clipboard** - funkcjonalność w CodeBlock
+- ✅ **Loading states** - dla AI requests z throttling
 
-### Inne funkcje poza zakresem MVP
+### Funkcje poza zakresem (v2)
 
-- Syntax highlighting kodu (można dodać później: Prism.js, ~3h)
-- Dark mode (można dodać później: Tailwind support, ~3h)
+- Dark mode (Tailwind support ready, ~2h implementation)
 - Zaawansowany code editor (Monaco/CodeMirror)
-- Import/export snippetów
-- Deployment do produkcji (Docker, DigitalOcean)
+- Import/export snippetów (JSON/CSV)
+- Auto-detect języka z AI
+- Snippet versioning
+- Snippet sharing/collaboration
 
 ---
 
@@ -74,10 +93,11 @@
 
 **Oszczędność czasu:**
 
-- Supabase (Auth + DB + SDK) oszczędza ~10-13 godzin vs custom backend
-- Shadcn/ui oszczędza ~5-8 godzin vs custom komponenty
-- Brak deploymentu oszczędza ~15-20 godzin vs Docker + DigitalOcean
-- **Razem: ~30-43 godziny oszczędności** - krytyczne dla 42h budżetu
+- Supabase (Auth + DB + SDK) oszczędził ~10-13 godzin vs custom backend
+- Shadcn/ui oszczędził ~5-8 godzin vs custom komponenty
+- Shiki (syntax highlighting) oszczędził ~4-5 godzin vs Prism.js setup
+- Vitest (native Vite integration) oszczędził ~2-3 godziny vs Jest
+- **Razem: ~21-29 godzin oszczędności** - pozwoliło na dodanie rozszerzeń
 
 **Koszty:**
 
@@ -134,16 +154,24 @@ CI/CD:
 
 ## Wersjonowanie
 
-**Wersja:** 2.0  
-**Data:** 2025-11-24  
-**Status:** ✅ Zatwierdzony - gotowy do implementacji
+**Wersja:** 3.0  
+**Data:** 2025-12-09  
+**Status:** ✅ Complete - MVP + Extensions delivered
 
-**Zmiany od v1.0:**
+**Zmiany od v2.1:**
+
+- Zaktualizowano wersje: React 19.1, Tailwind 4.1
+- Dodano Shiki 3.17 dla syntax highlighting
+- Dodano Vitest 4.0 dla testów jednostkowych
+- Dodano OpenRouter.ai dla AI features
+- Zaktualizowano status projektu do Complete
+- Dodano sekcję zrealizowanych rozszerzeń
+
+**Zmiany v2.1 (poprzednia):**
 
 - Uproszczono dokument do kluczowych informacji
 - Usunięto długie analizy i porównania
 - Dodano jasną strukturę: co jest, czego nie ma, dlaczego
-- Format dopasowany do przykładu ze zwięzłymi bullet points
 
 ---
 

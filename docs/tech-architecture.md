@@ -4,10 +4,11 @@
 
 This document describes the technical architecture of Spellbook, a personal code snippet management application built with Astro 5, React 18, and Supabase.
 
-**Project:** Spellbook MVP  
+**Project:** Spellbook MVP + Extensions  
 **Timeline:** 3 weeks (42 hours)  
 **Architecture Type:** Monolithic Frontend + BaaS Backend  
-**Deployment:** Local development only
+**Deployment:** Local development (production deployment optional)  
+**Status:** ✅ Complete - MVP + Extensions delivered
 
 ---
 
@@ -92,17 +93,19 @@ export default defineConfig({
 
 ---
 
-#### React 18.3
+#### React 19.1
 
 **Purpose:** Interactive UI components  
 **Usage Pattern:** Astro Islands (partial hydration)  
 **Components:**
 
-- Forms (Create/Edit snippet)
-- Search bar
-- Filter dropdowns
-- Modals (Delete confirmation)
+- Forms (Create/Edit snippet) - React Hook Form + Zod
+- Authentication (Login/Register/Logout)
+- Search bar with debouncing
+- Language filter dropdowns
+- Modals (Delete confirmation, AI explanation)
 - Snippet list (interactive features)
+- CodeBlock with syntax highlighting (Shiki) and AI explain
 
 **Hydration Strategy:**
 
@@ -141,30 +144,83 @@ export default defineConfig({
 
 ---
 
-#### Tailwind CSS 3.x
+#### Tailwind CSS 4.1
 
-**Purpose:** Utility-first styling  
+**Purpose:** Utility-first styling with improved performance  
 **Key Features:**
 
 - Responsive design utilities
-- Custom color palette
+- Custom color palette with CSS variables
 - Component classes via `@layer`
+- Improved build performance with Vite plugin
+- Modern CSS features support
 
 **Configuration:**
 
 ```javascript
-// tailwind.config.js
-module.exports = {
+// tailwind.config.js (Tailwind 4 with Vite plugin)
+export default {
   content: ['./src/**/*.{astro,html,js,jsx,ts,tsx}'],
   theme: {
     extend: {
       colors: {
-        primary: {...},  // Custom brand colors
+        // Uses CSS variables for dynamic theming
       },
     },
   },
   plugins: [],
 }
+```
+
+---
+
+### Additional Frontend Libraries
+
+#### Shiki 3.17
+
+**Purpose:** Syntax highlighting for code snippets  
+**Features:**
+
+- Server-side syntax highlighting
+- Multiple theme support (github-dark)
+- Support for 100+ programming languages
+- Line numbers and code transformers
+- Type-safe language identifiers
+
+**Integration:**
+
+```typescript
+import { codeToHtml } from "shiki";
+
+const highlighted = await codeToHtml(code, {
+  lang: "javascript",
+  theme: "github-dark",
+});
+```
+
+#### Vitest 4.0
+
+**Purpose:** Unit testing framework  
+**Features:**
+
+- Fast unit tests with ESM support
+- Coverage reports with V8 provider
+- React Testing Library integration
+- Compatible with Vite ecosystem
+
+**Configuration:**
+
+```typescript
+// vitest.config.ts
+export default defineConfig({
+  test: {
+    environment: "node", // or 'jsdom' for React components
+    coverage: {
+      provider: "v8",
+      thresholds: { lines: 80, functions: 80 },
+    },
+  },
+});
 ```
 
 ---
@@ -217,6 +273,46 @@ graph TD
 - JavaScript/TypeScript client
 - Automatic request signing
 - Real-time subscriptions (optional)
+
+---
+
+### AI Services Integration
+
+#### OpenRouter Service
+
+**Purpose:** AI-powered code explanations  
+**Provider:** OpenRouter.ai API  
+**Model:** DeepSeek R1 Turbo Chimera (free tier)
+
+**Features:**
+
+- Code explanation in Polish
+- Client-side rate limiting (3s throttle)
+- Error handling and retry logic
+- Structured JSON responses
+
+**Implementation:**
+
+```typescript
+// src/lib/services/openrouter.service.ts
+export class OpenRouterService {
+  async chat(request: ChatRequest): Promise<ChatResponse> {
+    // API call with retry logic and error handling
+  }
+}
+```
+
+**API Endpoint:**
+
+```typescript
+// src/pages/api/explain.ts
+export const POST: APIRoute = async ({ request }) => {
+  const { code, language } = await request.json();
+  const service = new OpenRouterService(apiKey);
+  const response = await service.chat({ messages: [...] });
+  return new Response(JSON.stringify({ explanation: response.content }));
+};
+```
 
 ---
 
@@ -428,47 +524,96 @@ spellbook/
 │   └── tech-architecture.md      # This document
 │
 ├── src/
+│   ├── __tests__/                # Unit tests
+│   │   ├── setup.ts              # Vitest setup
+│   │   └── utils/                # Utils tests
+│   │
 │   ├── components/
-│   │   ├── ui/                   # Shadcn/ui components
-│   │   │   ├── button.tsx
-│   │   │   ├── input.tsx
-│   │   │   ├── dialog.tsx
-│   │   │   └── ...
+│   │   ├── auth/                 # Authentication components
+│   │   │   ├── LoginForm.tsx
+│   │   │   ├── RegisterForm.tsx
+│   │   │   └── LogoutButton.tsx
 │   │   │
-│   │   ├── SnippetForm.tsx       # Create/Edit form
-│   │   ├── SnippetList.tsx       # List of snippets
-│   │   ├── SnippetCard.tsx       # Single snippet card
-│   │   ├── SearchBar.tsx         # Search component
-│   │   ├── FilterBar.tsx         # Language/tag filters
-│   │   └── Header.tsx            # App header
+│   │   ├── snippets/             # Snippet-related components
+│   │   │   ├── SnippetForm.tsx   # Create/Edit form
+│   │   │   ├── SnippetList.tsx   # List of snippets
+│   │   │   ├── SnippetCard.tsx   # Single snippet card
+│   │   │   ├── SnippetDetail.tsx # Snippet details view
+│   │   │   ├── CodeBlock.tsx     # Code with syntax highlighting + AI
+│   │   │   ├── SearchBar.tsx     # Search component
+│   │   │   └── LanguageFilter.tsx # Language filter
+│   │   │
+│   │   └── ui/                   # Shadcn/ui components
+│   │       └── button.tsx
 │   │
 │   ├── layouts/
 │   │   ├── BaseLayout.astro      # Base HTML layout
 │   │   └── AuthLayout.astro      # Layout with auth check
 │   │
 │   ├── pages/
+│   │   ├── api/
+│   │   │   ├── chat.ts           # OpenRouter chat endpoint
+│   │   │   └── explain.ts        # AI code explanation
+│   │   │
 │   │   ├── index.astro           # Homepage (redirect to /snippets)
 │   │   ├── login.astro           # Login page
-│   │   ├── snippets/
-│   │   │   ├── index.astro       # Snippet list
-│   │   │   ├── [id].astro        # Snippet detail
-│   │   │   ├── new.astro         # Create snippet
-│   │   │   └── [id]/edit.astro   # Edit snippet
+│   │   ├── register.astro        # Register page
+│   │   └── snippets/
+│   │       ├── index.astro       # Snippet list
+│   │       ├── [id].astro        # Snippet detail
+│   │       ├── new.astro         # Create snippet
+│   │       └── [id]/edit.astro   # Edit snippet
+│   │
+│   ├── db/
+│   │   ├── supabase.client.ts    # Supabase client setup
+│   │   └── database.types.ts     # Generated DB types
+│   │
+│   ├── hooks/
+│   │   └── useDebounce.ts        # Custom React hooks
 │   │
 │   ├── lib/
-│   │   ├── supabase.ts           # Supabase client setup
-│   │   ├── schemas.ts            # Zod validation schemas
-│   │   └── types.ts              # TypeScript types
+│   │   ├── constants/
+│   │   │   └── languages.ts      # Language mappings
+│   │   │
+│   │   ├── services/
+│   │   │   ├── auth.service.ts   # Auth service layer
+│   │   │   ├── snippets.service.ts # Snippets service layer
+│   │   │   └── openrouter.service.ts # AI service
+│   │   │
+│   │   ├── utils/
+│   │   │   ├── errorHandling.ts  # Error utilities
+│   │   │   ├── html.ts           # HTML escape
+│   │   │   ├── language.ts       # Language helpers
+│   │   │   ├── throttle.ts       # Throttle utility
+│   │   │   ├── toast.ts          # Toast notifications
+│   │   │   └── supabase-browser.ts # Browser client
+│   │   │
+│   │   └── validation/
+│   │       ├── auth.schemas.ts   # Auth Zod schemas
+│   │       ├── snippet.schemas.ts # Snippet Zod schemas
+│   │       └── openrouter.schemas.ts # AI Zod schemas
+│   │
+│   ├── types/
+│   │   └── openrouter.types.ts   # OpenRouter types
+│   │
+│   └── types.ts                  # Shared types and DTOs
 │   │
 │   ├── middleware/
 │   │   └── auth.ts               # Protected routes middleware
 │   │
 │   └── env.d.ts                  # Environment types
 │
-├── tests/
-│   ├── e2e/
-│   │   └── snippets.spec.ts      # E2E tests
-│   └── playwright.config.ts
+├── e2e/
+│   ├── fixtures/
+│   │   └── test-users.ts         # Test user data
+│   ├── page-objects/
+│   │   ├── base.page.ts          # Base page object
+│   │   └── login.page.ts         # Login page object
+│   └── tests/
+│       └── login.spec.ts         # E2E tests
+│
+├── playwright.config.ts          # Playwright configuration
+├── vitest.config.ts              # Vitest configuration
 │
 ├── .github/
 │   └── workflows/
@@ -549,11 +694,11 @@ export const requireAuth: MiddlewareHandler = async ({ request, redirect }, next
 ### Snippet Form Component
 
 ```tsx
-// src/components/SnippetForm.tsx
+// src/components/snippets/SnippetForm.tsx
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { snippetSchema, type SnippetInput } from "../lib/schemas";
-import { supabase } from "../lib/supabase";
+import { snippetSchema, type SnippetInput } from "@/lib/validation/snippet.schemas";
+import { createSnippet, updateSnippet } from "@/lib/services/snippets.service";
 
 export function SnippetForm({ initialData, snippetId }) {
   const {
@@ -567,19 +712,49 @@ export function SnippetForm({ initialData, snippetId }) {
 
   const onSubmit = async (data: SnippetInput) => {
     if (snippetId) {
-      // Update existing snippet
-      const { error } = await supabase.from("snippets").update(data).eq("id", snippetId);
+      await updateSnippet(snippetId, data);
     } else {
-      // Create new snippet
-      const { error } = await supabase.from("snippets").insert(data);
+      await createSnippet(data);
     }
-
-    if (!error) {
-      window.location.href = "/snippets";
-    }
+    window.location.href = "/snippets";
   };
 
   return <form onSubmit={handleSubmit(onSubmit)}>{/* Form fields */}</form>;
+}
+```
+
+### CodeBlock Component with AI Explain
+
+```tsx
+// src/components/snippets/CodeBlock.tsx
+import { useState, useEffect } from "react";
+import { codeToHtml } from "shiki";
+import type { SnippetLanguage } from "@/types";
+
+export function CodeBlock({ code, language }: { code: string; language: SnippetLanguage }) {
+  const [html, setHtml] = useState("");
+  const [explanation, setExplanation] = useState("");
+
+  useEffect(() => {
+    codeToHtml(code, { lang: LANGUAGE_MAP[language], theme: "github-dark" }).then(setHtml);
+  }, [code, language]);
+
+  const explainCode = async () => {
+    const res = await fetch("/api/explain", {
+      method: "POST",
+      body: JSON.stringify({ code, language }),
+    });
+    const data = await res.json();
+    setExplanation(data.explanation);
+  };
+
+  return (
+    <div>
+      <button onClick={explainCode}>💡 Explain</button>
+      <div dangerouslySetInnerHTML={{ __html: html }} />
+      {explanation && <div>{explanation}</div>}
+    </div>
+  );
 }
 ```
 
@@ -728,6 +903,12 @@ graph TB
         C[Search Test]
     end
 
+    subgraph "Unit Tests - Vitest"
+        G[Utils Tests]
+        H[Language Helpers]
+        I[Error Handling]
+    end
+
     subgraph "Application"
         D[Astro Pages]
         E[React Components]
@@ -737,45 +918,94 @@ graph TB
     A --> D
     B --> D
     C --> D
+    G --> D
+    H --> E
+    I --> E
     D --> E
     E --> F
 ```
 
-### E2E Test Example
+### Unit Tests with Vitest
+
+**Coverage:** 80%+ for utility functions
+
+**Test Files:**
+```
+src/__tests__/
+├── setup.ts
+└── utils/
+    ├── errorHandling.test.ts
+    ├── escapeHtml.test.ts
+    ├── languageHelpers.test.ts
+    ├── languageMap.test.ts
+    └── throttle.test.ts
+```
+
+**Example Unit Test:**
 
 ```typescript
-// tests/e2e/snippets.spec.ts
+// src/__tests__/utils/languageHelpers.test.ts
+import { describe, it, expect } from "vitest";
+import { getShikiLanguage } from "@/lib/utils/language";
+
+describe("Language Helpers", () => {
+  it("should map Spellbook languages to Shiki identifiers", () => {
+    expect(getShikiLanguage("JavaScript")).toBe("javascript");
+    expect(getShikiLanguage("MySQL")).toBe("sql");
+    expect(getShikiLanguage("Note")).toBe("markdown");
+  });
+});
+```
+
+### E2E Test with Page Object Model
+
+**Pattern:** Page Object Model for maintainability
+
+```typescript
+// e2e/page-objects/login.page.ts
+export class LoginPage {
+  constructor(private page: Page) {}
+
+  async goto() {
+    await this.page.goto("/login");
+  }
+
+  async login(email: string, password: string) {
+    await this.fillEmail(email);
+    await this.fillPassword(password);
+    await this.clickLogin();
+  }
+
+  async expectLoginSuccess() {
+    await this.page.waitForURL("/snippets");
+  }
+}
+```
+
+```typescript
+// e2e/tests/login.spec.ts
 import { test, expect } from "@playwright/test";
+import { LoginPage } from "../page-objects/login.page";
+import { testUsers } from "../fixtures/test-users";
 
-test("complete snippet lifecycle", async ({ page }) => {
-  // 1. Login
-  await page.goto("/login");
-  await page.fill('[name="email"]', "test@example.com");
-  await page.fill('[name="password"]', "password123");
-  await page.click('button[type="submit"]');
+test.describe("Login Flow", () => {
+  let loginPage: LoginPage;
 
-  // 2. Create snippet
-  await page.click("text=New Snippet");
-  await page.fill('[name="title"]', "Test MySQL Query");
-  await page.fill('[name="content"]', "SELECT * FROM users");
-  await page.selectOption('[name="language"]', "MySQL");
-  await page.click('button:has-text("Save")');
+  test.beforeEach(async ({ page }) => {
+    loginPage = new LoginPage(page);
+    await loginPage.goto();
+  });
 
-  // 3. Verify snippet appears
-  await expect(page.locator("text=Test MySQL Query")).toBeVisible();
+  test("should successfully log in with valid credentials", async () => {
+    await loginPage.login(testUsers.valid.email, testUsers.valid.password);
+    await loginPage.expectLoginSuccess();
+  });
 
-  // 4. Edit snippet
-  await page.click("text=Test MySQL Query");
-  await page.click("text=Edit");
-  await page.fill('[name="title"]', "Updated MySQL Query");
-  await page.click('button:has-text("Save")');
-
-  // 5. Delete snippet
-  await page.click("text=Delete");
-  await page.click('button:has-text("Confirm")');
-
-  // 6. Verify snippet deleted
-  await expect(page.locator("text=Updated MySQL Query")).not.toBeVisible();
+  test("should show validation errors for empty fields", async () => {
+    await loginPage.clickLogin();
+    await loginPage.expectEmailError("Email is required");
+    await loginPage.expectPasswordError("Password is required");
+  });
 });
 ```
 
@@ -1097,6 +1327,11 @@ export type Database = {
 
 ---
 
-**Document Version:** 1.0  
-**Created:** 2025-11-24  
-**Status:** ✅ Approved - Reference for implementation
+**Document Version:** 2.0  
+**Created:** 2024-11-24  
+**Last Updated:** 2025-12-09  
+**Status:** ✅ Complete - MVP + Extensions delivered
+
+**Changelog:**
+- v2.0 (2025-12-09): Zaktualizowano do React 19, Tailwind 4, dodano Shiki, Vitest, OpenRouter, nowe komponenty
+- v1.0 (2024-11-24): Początkowa architektura techniczna MVP
