@@ -102,9 +102,13 @@ export default function SnippetForm({ mode, initialData }: Props) {
         <label htmlFor="language" className="block text-sm font-medium mb-1">
           Language *
         </label>
-        <select {...register("language")} id="language" className="w-full px-3 py-2 border rounded-md">
+        <select
+          {...register("language")}
+          id="language"
+          className="w-full px-3 py-2 border rounded-md bg-background text-foreground"
+        >
           {SNIPPET_LANGUAGES.map((lang) => (
-            <option key={lang} value={lang}>
+            <option key={lang} value={lang} className="bg-background text-foreground">
               {lang}
             </option>
           ))}
