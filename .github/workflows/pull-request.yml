@@ -18,6 +18,20 @@ jobs:
       - name: Run ESLint
         run: npm run lint
 
+  build:
+    name: Build
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: ./.github/actions/setup
+
+      - name: Build application
+        run: npm run build
+
   unit-test:
     name: Unit Tests
     needs: lint
@@ -41,7 +55,7 @@ jobs:
 
   status-comment:
     name: PR Status Comment
-    needs: [lint, unit-test]
+    needs: [lint, build, unit-test]
     if: success()
     runs-on: ubuntu-latest
     permissions:
@@ -63,6 +77,7 @@ jobs:
             | Check | Status |
             |-------|--------|
             | Lint | ✅ Passed |
+            | Build | ✅ Passed |
             | Unit Tests | ✅ Passed |
 
             ### 📊 Artifacts
